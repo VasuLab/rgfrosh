@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -11,11 +11,11 @@ import numpy as np
 _gas_constant: float = 8314.46261815324
 """Universal gas constant [J/kmol/K]."""
 
-max_iter: int = 100
-"""Maximum number of iterations for the solver, default: 100."""
+max_iter: int = 1000
+"""Maximum number of iterations for the solver."""
 
-relative_tolerance: float = 1e-6
-"""Relative tolerance for the solver convergence criteria, default: 1E-6."""
+relative_tolerance: float = 1E-6
+"""Relative tolerance for the solver convergence criteria."""
 
 
 class ConvergenceError(Exception):
@@ -120,10 +120,8 @@ class FrozenShock:
         P1: float,
     ):
         """
-        Initialize a new object with the given initial conditions and the shock
-        conditions calculated using the [incident][rgfrosh.FrozenShock.incident_conditions]
-        and [reflected][rgfrosh.FrozenShock.reflected_conditions] solvers for the given
-        thermodynamic interface.
+        Solves for the post-incident-shock and post-reflected-shock conditions
+        given the initial conditions and incident shock velocity.
 
         Parameters:
             thermo: Thermodynamic interface.
@@ -162,16 +160,15 @@ class FrozenShock:
             P1: Initial pressure [Pa].
 
         Returns:
-            Tuple[float, float, float, float]:
-            - `u2`: Velocity behind the incident shock (shock-fixed) [m/s].
-            - `T2`: Temperature behind the incident shock [K].
-            - `P2`: Pressure behind the incident shock [Pa].
-            - `rho2`: Density behind the incident shock [kg/m^3^].
+            u2: Velocity behind the incident shock (shock-fixed) [m/s].
+            T2: Temperature behind the incident shock [K].
+            P2: Pressure behind the incident shock [Pa].
+            rho2: Density behind the incident shock [kg/m^3^].
 
         Exceptions:
-            ConvergenceError: If the relative change in `T2` and `P2` is not below the
-                [relative tolerance][rgfrosh.relative_tolerance] within the
-                [maximum number][rgfrosh.max_iter] of iterations.
+            ConvergenceError: If the relative change in `T5` and `P5` is not below the
+                [`relative_tolerance`][rgfrosh.relative_tolerance] within
+                [`max_iter`][rgfrosh.max_iter] iterations.
 
         """
 
@@ -201,13 +198,11 @@ class FrozenShock:
             f1 = (P2 / P1 - 1) + (u1 ** 2 / (P1 * nu1)) * (nu2 / nu1 - 1)
             f2 = ((h2 - h1) / (1 / 2 * u1 ** 2)) + (nu2 ** 2 / nu1 ** 2 - 1)
 
-            df1_dP2 = 1 / P1 - u1 ** 2 / (P1 * nu1 ** 2) * nu2 * kappa2
-            df1_dT2 = u1 ** 2 / (P1 * nu1 ** 2) * nu2 * beta2
+            df1_dT2 = u1 ** 2 * nu2 * beta2 / (P1 * nu1 ** 2)
+            df1_dP2 = 1 / P1 - u1 ** 2 * nu2 * kappa2 / (P1 * nu1 ** 2)
 
-            df2_dP2 = (
-                2 * nu2 * (1 - T2 * beta2) / u1 ** 2 - 2 * nu2 ** 2 / nu1 ** 2 * kappa2
-            )
-            df2_dT2 = 2 * cp2 / u1 ** 2 + 2 * nu2 ** 2 * beta2 / nu1 ** 2
+            df2_dT2 = 2 * cp2 / u1 ** 2 + 2 * (nu2 / nu1) ** 2 * beta2
+            df2_dP2 = 2 * nu2 * (1 - T2 * beta2) / u1 ** 2 - 2 * nu2 ** 2 * kappa2 / nu1 ** 2
 
             deltaT2, deltaP2 = np.matmul(
                 np.linalg.inv(np.array([
@@ -254,16 +249,15 @@ class FrozenShock:
             P2: Pressure behind the incident shock [Pa].
 
         Returns:
-            Tuple[float, float, float, float]:
-            - `u5`: Reflected shock velocity [m/s].
-            - `T5`: Temperature behind the reflected shock [K].
-            - `P5`: Pressure behind the reflected shock [Pa].
-            - `rho5`: Density behind the reflected shock [kg/m^3^].
+            u5: Reflected shock velocity [m/s].
+            T5: Temperature behind the reflected shock [K].
+            P5: Pressure behind the reflected shock [Pa].
+            rho5: Density behind the reflected shock [kg/m^3^].
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [relative tolerance][rgfrosh.relative_tolerance] within the
-                [maximum number][rgfrosh.max_iter] of iterations.
+                [`relative_tolerance`][rgfrosh.relative_tolerance] within
+                [`max_iter`][rgfrosh.max_iter] iterations.
 
         """
 
@@ -292,15 +286,15 @@ class FrozenShock:
             f3 = (P5 / P2 - 1) + (u1 - u2) ** 2 / P2 / (nu5 - nu2)
             f4 = 2 * (h5 - h2) / (u1 - u2) ** 2 + (nu5 + nu2) / (nu5 - nu2)
 
-            df3_dP5 = 1 / P2 + (u1 - u2) ** 2 * nu5 * kappa5 / P2 / (nu5 - nu2) ** 2
-            df3_dT5 = -((u1 - u2) ** 2) / P2 / (nu5 - nu2) ** 2 * nu5 * beta5
+            df3_dT5 = -nu5 * beta5 * (u1 - u2) ** 2 / (P2 * (nu5 - nu2) ** 2)
+            df3_dP5 = 1 / P2 + nu5 * kappa5 * (u1 - u2) ** 2 / (P2 * (nu5 - nu2) ** 2)
 
+            df4_dT5 = 2 * cp5 / (u1 - u2) ** 2 \
+                      - 2 * nu2 * nu5 * beta5 / (nu5 - nu2) ** 2
             df4_dP5 = (
                 2 * nu5 * (1 - T5 * beta5) / (u1 - u2) ** 2
                 + 2 * nu2 * nu5 * kappa5 / (nu5 - nu2) ** 2
             )
-            df4_dT5 = 2 * cp5 / (u1 - u2) ** 2 \
-                      - 2 * nu2 * nu5 * beta5 / (nu5 - nu2) ** 2
 
             deltaT5, deltaP5 = np.matmul(
                 np.linalg.inv(np.array([
@@ -323,5 +317,130 @@ class FrozenShock:
                 nu5 = 1 / thermo.density_mass
                 u5 = (u1 - u2) / (nu2 / nu5 - 1)
                 return u5, T5, P5, thermo.density_mass
+
+        raise ConvergenceError
+
+    @classmethod
+    def target_conditions(
+        cls,
+        thermo: ThermoInterface,
+        T5: float,
+        P5: float,
+        T1: float = 300
+    ):
+        """
+        Solves for the initial pressure and incident shock velocity given the target
+        post-reflected-shock conditions.
+
+        Parameters:
+            thermo: Thermodynamic interface.
+            T5: Temperature behind the reflected shock [K].
+            P5: Pressure behind the reflected shock [Pa].
+            T1: Initial temperature [K].
+
+        Exceptions:
+            ConvergenceError: If the relative change in `u1`, `P1`, `T2`, and `P2`
+                is not below the [`relative_tolerance`][rgfrosh.relative_tolerance]
+                within [`max_iter`][rgfrosh.max_iter] iterations.
+
+        """
+
+        thermo.TP = T5, P5
+        h5 = thermo.enthalpy_mass
+        nu5 = 1 / thermo.density_mass
+
+        thermo.TP = T1, 101325
+        cp1 = thermo.cp_mass
+        R = _gas_constant / thermo.mean_molecular_weight
+        gamma1 = cp1 / (cp1 - R)
+        a1 = (gamma1 * _gas_constant / thermo.mean_molecular_weight * T1) ** 0.5
+
+        a = 2 * (gamma1 - 1) * (3 * gamma1 - 1)
+        b = (3 * gamma1 - 1) * (3 - gamma1) - 4 * (gamma1 - 1) ** 2 - (
+                gamma1 + 1) ** 2 * T5 / T1
+        c = -2 * (gamma1 - 1) * (3 - gamma1)
+
+        MS = ((-b + (b ** 2 - 4 * a * c) ** 0.5) / (2 * a)) ** 0.5
+
+        u1 = MS * a1
+        P1 = P5 * (gamma1 + 1) / (2 * gamma1 * MS ** 2 - (gamma1 - 1)) * (
+                (gamma1 - 1) * MS ** 2 + 2) / (
+                     (3 * gamma1 - 1) * MS ** 2 - 2 * (gamma1 - 1))
+
+        P2 = P1 * (2 * gamma1 * MS ** 2 - (gamma1 - 1)) / (gamma1 + 1)
+        T2 = T1 * ((gamma1 * MS ** 2 - (gamma1 - 1) / 2) *
+                   ((gamma1 - 1) / 2 * MS ** 2 + 1) / ((gamma1 + 1) / 2 * MS) ** 2)
+
+        for i in range(max_iter):
+            thermo.TP = T1, P1
+            h1 = thermo.enthalpy_mass
+            nu1 = 1 / thermo.density_mass
+            beta1 = thermo.thermal_expansion_coeff
+            kappa1 = thermo.isothermal_compressibility
+
+            thermo.TP = T2, P2
+            h2 = thermo.enthalpy_mass
+            nu2 = 1 / thermo.density_mass
+            cp2 = thermo.cp_mass
+            beta2 = thermo.thermal_expansion_coeff
+            kappa2 = thermo.isothermal_compressibility
+
+            f1 = P2 / P1 - 1 + u1 ** 2 / (P1 * nu1) * (nu2 / nu1 - 1)
+            f2 = 2 * (h2 - h1) / u1 ** 2 + (nu2 / nu1) ** 2 - 1
+            f3 = (P5 / P2 - 1) + (u1 * (1 - nu2 / nu1)) ** 2 / P2 / (nu5 - nu2)
+            f4 = 2 * (h5 - h2) / (u1 * (1 - nu2 / nu1)) ** 2 + (nu5 + nu2) / (nu5 - nu2)
+
+            df1_du1 = 2 * u1 / (P1 * nu1 ** 2) * (nu2 - nu1)
+            df1_dP1 = -P2 / P1 ** 2 + u1 ** 2 / (P1 ** 2 * nu1 ** 2) \
+                      * (P1 * kappa1 * (2 * nu2 - nu1) - (nu2 - nu1))
+            df1_dT2 = u1 ** 2 * nu2 * beta2 / (P1 * nu1 ** 2)
+            df1_dP2 = 1 / P1 - u1 ** 2 * nu2 * kappa2 / (P1 * nu1 ** 2)
+
+            df2_du1 = -4 * (h2 - h1) / u1 ** 3
+            df2_dP1 = 2 * nu2 ** 2 * kappa1 / nu1 ** 2 - 2 * nu1 * (
+                    1 - T1 * beta1) / u1 ** 2
+            df2_dT2 = 2 * cp2 / u1 ** 2 + 2 * (nu2 / nu1) ** 2 * beta2
+            df2_dP2 = 2 * nu2 * (1 - T2 * beta2) / u1 ** 2 - 2 * nu2 ** 2 * kappa2 / nu1 ** 2
+
+            df3_du1 = 2 * u1 * (1 - nu2 / nu1) ** 2 / (P2 * (nu5 - nu2))
+            df3_dP1 = -2 * u1 ** 2 * nu2 * kappa1 * (1 - nu2 / nu1) / (
+                    P2 * nu1 * (nu5 - nu2))
+            df3_dT2 = u1 ** 2 * nu2 * beta2 / (P2 * nu1 ** 2) * \
+                      (nu1 - nu2) / (nu5 - nu2) ** 2 * (nu1 + nu2 - 2 * nu5)
+            df3_dP2 = -P5 / P2 ** 2 - u1 ** 2 / (nu1 ** 2 * P2) * (nu1 - nu2) / (nu5 - nu2) \
+                      * ((nu2 * kappa2 * (nu1 + nu2 - 2 * nu5)) / (nu5 - nu2) + (nu1 - nu2) / P2)
+
+            df4_du1 = -4 * (h5 - h2) / (u1 ** 3 * (1 - nu2 / nu1) ** 2)
+            df4_dP1 = 4 * nu2 * kappa1 * (h5 - h2) / (u1 ** 2 * nu1) / (
+                    1 - nu2 / nu1) ** 3
+            df4_dT2 = 2 * nu1 ** 2 / u1 ** 2 * (2 * nu2 * beta2 * (h5 - h2) - cp2 * (nu1 - nu2)) \
+                      / (nu1 - nu2) ** 3 + 2 * nu2 * nu5 * beta2 / (nu5 - nu2) ** 2
+            df4_dP2 = -2 * nu1 ** 2 * nu2 / u1 ** 2 * (2 * kappa2 * (h5 - h2) + (nu1 - nu2) * (1 - T2 * beta2)) \
+                      / (nu1 - nu2) ** 3 - 2 * nu2 * nu5 * kappa2 / (nu5 - nu2) ** 2
+
+            delta_u1, delta_P1, delta_T2, delta_P2 = np.matmul(
+                np.linalg.inv(np.array([
+                    [df1_du1, df1_dP1, df1_dT2, df1_dP2],
+                    [df2_du1, df2_dP1, df2_dT2, df2_dP2],
+                    [df3_du1, df3_dP1, df3_dT2, df3_dP2],
+                    [df4_du1, df4_dP1, df4_dT2, df4_dP2]
+                ])),
+                np.array([f1, f2, f3, f4]),
+            )
+
+            converged = (
+                abs(delta_u1) <= u1 * relative_tolerance and
+                abs(delta_P1) <= P1 * relative_tolerance and
+                abs(delta_T2) <= T2 * relative_tolerance and
+                abs(delta_P2) <= P2 * relative_tolerance
+            )
+
+            u1 -= delta_u1
+            P1 -= delta_P1
+            T2 -= delta_T2
+            P2 -= delta_P2
+
+            if converged:
+                return cls(thermo, u1, T1, P1)
 
         raise ConvergenceError

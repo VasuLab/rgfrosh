@@ -1,6 +1,49 @@
 # User Guide
 
+RGFROSH has two main applications:
+
+=== "Analysis"
+    
+    Calculating shock conditions from the initial conditions and experimentally measured shock velocity:
+    
+    ```py hl_lines="4"
+    from rgfrosh import FrozenShock
+    import cantera as ct
+    
+    shock = FrozenShock(ct.CarbonDioxide(), 1000, 295, 101325)
+    print(f"T5 = {shock.T5:.1f} K, P5 = {shock.P5 / 101325:.2f} atm")
+    ```
+
+    which gives the post-reflected-shock temperature (`T5`) and pressure (`P5`):
+    
+    ```
+    T5 = 1222.3 K, P5 = 115.82 atm
+    ```
+
+=== "Planning"
+    
+    Calculating initial conditions for target post-reflected-shock conditions:
+    
+    ```py hl_lines="4"
+    from rgfrosh import FrozenShock
+    import cantera as ct
+    
+    shock = FrozenShock.target_conditions(ct.CarbonDioxide(), 1100, 200e5)
+    print(f"P1 = {shock.P1 / 133.322:.0f} torr, u1 = {shock.u1:.1f} m/s")
+    ```
+    
+    which gives the required fill pressure (`P1`) and incident shock velocity (`u1`):
+    
+    ```
+    P1 = 1687 torr, u1 = 918.9 m/s
+    ```
+
+## Thermodynamic Interfaces 
+
 ### Cantera
+
+RGFROSH natively supports `cantera.ThermoPhase` objects, as shown in the
+above examples.
 
 !!! warning
     The implementations of the Redlich-Kwong (RK) and Peng-Robinson (PR) EOS
@@ -8,25 +51,7 @@
     `thermal_expansion_coeff` 
     (see [Cantera/enhancements/issues/#122](https://github.com/Cantera/enhancements/issues/122)).
 
-PyRGFROSH natively supports using `cantera.ThermoPhase` objects, as shown in the
-following example:
-
-```py hl_lines="4"
-from rgfrosh import FrozenShock
-import cantera as ct
-
-shock = FrozenShock(ct.CarbonDioxide(), 1000, 295, 101325)
-print(f"T5 = {shock.T5:.1f} K, P5 = {shock.P5 / 101325:.2f} atm")
-```
-
-which outputs the following solution of the post-reflected-shock conditions 
-for Cantera's EOS for pure carbon dioxide:
-
-```
-T5 = 1222.3 K, P5 = 115.82 atm
-```
-
-## User-Defined Interfaces
+### User-Defined Interfaces
 
 Custom thermodynamic routines are supported using the 
 [`ThermoInterface`][rgfrosh.ThermoInterface] class, which utilizes structural 
@@ -37,7 +62,7 @@ subtype, even if it is not an explicit subclass of `ThermoInterface`; however,
 explicitly subclassing `ThermoInterface` is recommended for user-defined 
 interfaces to ensure all required methods are defined.
 
-### CoolProp
+### CoolProp (Example)
 
 An interface for `CoolProp.AbstractState`, which accounts for differences 
 in method names as well as units, is shown in the following example:

@@ -1,7 +1,7 @@
-site_name: PyRGFROSH
-site_url: https://vasulab.github.io/PyRGFROSH
-repo_name: VasuLab/PyRGFROSH
-repo_url: https://github.com/VasuLab/PyRGFROSH
+site_name: RGFROSH
+site_url: https://corykinney.github.io/RGFROSH
+repo_name: corykinney/RGFROSH
+repo_url: https://github.com/corykinney/RGFROSH
 edit_uri: tree/main/docs/
 
 nav:
@@ -39,19 +39,16 @@ theme:
 plugins:
   - search
   - mkdocstrings:
-      default_handler: python
       handlers:
         python:
           rendering:
+            docstring_section_style: list
             members_order: source
+            merge_init_into_class: true
+            show_signature_annotations: true
             show_root_full_path: false
             show_root_heading: true
-            show_root_toc_entry: true
             show_source: false
-          selection:
-            filters:
-              - "!^_"  # exclude all members starting with _
-              - "^__init__$"  # but always include __init__ modules and methods
 
 markdown_extensions:
   - abbr
