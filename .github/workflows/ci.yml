@@ -16,6 +16,7 @@ jobs:
         with:
           python-version: 3.8.10
       - run: |
+          pip install rgfrosh
           pip install numpy
           pip install typing-extensions
           pip install CoolProp
