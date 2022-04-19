@@ -8,6 +8,10 @@
     rendering:
       heading_level: 3
 
+::: rgfrosh.compressibility_factor
+    rendering:
+      heading_level: 3
+
 ::: rgfrosh.ConvergenceError
 
 ::: rgfrosh.ThermoInterface

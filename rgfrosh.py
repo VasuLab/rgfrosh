@@ -1,4 +1,4 @@
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -76,6 +76,28 @@ class ThermoInterface(Protocol):
     def thermal_expansion_coeff(self) -> float:
         """Thermal expansion coefficient [1/K]."""
         raise NotImplementedError
+
+
+def compressibility_factor(thermo: ThermoInterface, T: float = None, P: float = None):
+    r"""
+    Calculates the compressibility factor of a gas at a specified state:
+
+    $$
+    Z = \frac{P}{\rho R_{specific} T}
+    $$
+
+    Parameters:
+        thermo: Thermodynamic interface.
+        T: Temperature [K].
+        P: Pressure [Pa].
+
+    """
+    if T and P:
+        thermo.TP = T, P
+    else:
+        T, P = thermo.TP
+
+    return P / (thermo.density_mass * _gas_constant / thermo.mean_molecular_weight * T)
 
 
 @dataclass(init=False)
