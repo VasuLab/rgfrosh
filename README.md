@@ -13,13 +13,13 @@ for calculating mixture properties as a function of temperature and pressure and
 
 - [Cantera](https://github.com/cantera/cantera)
 - [CoolProp](https://github.com/CoolProp/CoolProp) (see [example](https://corykinney.github.io/RGFROSH/guide/#coolprop-example)) 
-- [User-defined interfaces](https://corykinney.github.io/RGFROSH/guide/#user-defined-interfaces)
+- [User-defined interfaces](https://vasulab.github.io/RGFROSH/guide/#user-defined-interfaces)
 
 ## Documentation
 
-The [documentation](https://corykinney.github.io/RGFROSH) provides a detailed 
-[user guide](https://corykinney.github.io/RGFROSH/guide) and 
-[API reference](https://corykinney.github.io/RGFROSH/reference) for the package.
+The [documentation](https://vasulab.github.io/RGFROSH) provides a detailed 
+[user guide](https://vasulab.github.io/RGFROSH/guide) and 
+[API reference](https://vasulab.github.io/RGFROSH/reference) for the package.
 
 ## Installation
 
