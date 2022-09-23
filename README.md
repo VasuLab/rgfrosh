@@ -12,7 +12,7 @@ a shock tube for an arbitrary equation of state. RGFROSH requires a thermodynami
 for calculating mixture properties as a function of temperature and pressure and currently supports:
 
 - [Cantera](https://github.com/cantera/cantera)
-- [CoolProp](https://github.com/CoolProp/CoolProp) (see [example](https://corykinney.github.io/RGFROSH/guide/#coolprop-example)) 
+- [CoolProp](https://github.com/CoolProp/CoolProp) (see [example](https://vasulab.github.io/RGFROSH/guide/#coolprop-example)) 
 - [User-defined interfaces](https://vasulab.github.io/RGFROSH/guide/#user-defined-interfaces)
 
 ## Documentation
