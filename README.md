@@ -1,5 +1,7 @@
 # Python Real Gas FROzen SHock (PyRGFROSH) Solver
 
+[![DOI](https://zenodo.org/badge/435992350.svg)](https://zenodo.org/badge/latestdoi/435992350)
+
 > This project is a solver for the frozen shock equations[^1] developed in Python at the
 > University of Central Florida. The original RGFROSH was developed in FORTRAN at Stanford 
 > University by D. F. Davidson and R. K. Hanson using real gas subroutines for 
