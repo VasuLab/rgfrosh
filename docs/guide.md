@@ -1,6 +1,6 @@
 # User Guide
 
-RGFROSH has two main applications:
+PyRGFROSH has two main applications:
 
 === "Analysis"
     
@@ -42,7 +42,7 @@ RGFROSH has two main applications:
 
 ### Cantera
 
-RGFROSH natively supports `cantera.ThermoPhase` objects, as shown in the
+PyRGFROSH natively supports `cantera.ThermoPhase` objects, as shown in the
 above examples.
 
 !!! warning

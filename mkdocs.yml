@@ -1,7 +1,7 @@
-site_name: RGFROSH
-site_url: https://vasulab.github.io/RGFROSH
-repo_name: VasuLab/RGFROSH
-repo_url: https://github.com/VasuLab/RGFROSH
+site_name: PyRGFROSH
+site_url: https://vasulab.github.io/PyRGFROSH
+repo_name: VasuLab/PyRGFROSH
+repo_url: https://github.com/VasuLab/PyRGFROSH
 edit_uri: tree/main/docs/
 
 nav:
