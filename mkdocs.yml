@@ -8,6 +8,7 @@ nav:
   - Home:
       - index.md
       - License: license.md
+      - Citation: citation.md
   - User Guide: guide.md
   - API Reference: reference.md
 
