@@ -118,6 +118,8 @@ class FrozenShock:
 
     u2: float
     """Velocity behind the incident shock (shock-fixed) [m/s]."""
+    U2: float
+    """Velocity behind the incident shock (lab frame) [m/s]."""
     T2: float
     """Temperature behind the incident shock [K]."""
     P2: float
@@ -162,6 +164,8 @@ class FrozenShock:
 
         self.u2, self.T2, self.P2, self.rho2 = FrozenShock.incident_conditions(
             thermo, u1, T1, P1)
+        self.U2 = self.u1 - self.u2
+
         self.u5, self.T5, self.P5, self.rho5 = FrozenShock.reflected_conditions(
             thermo, u1, P1, self.u2, self.T2, self.P2)
 
