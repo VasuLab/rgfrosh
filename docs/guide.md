@@ -11,13 +11,19 @@ PyRGFROSH has two main applications:
     import cantera as ct
     
     shock = FrozenShock(ct.CarbonDioxide(), 1000, 295, 101325)
-    print(f"T5 = {shock.T5:.1f} K, P5 = {shock.P5 / 101325:.2f} atm")
+    print(shock)
     ```
 
-    which gives the post-reflected-shock temperature (`T5`) and pressure (`P5`):
+    which outputs the following table:
     
-    ```
-    T5 = 1222.3 K, P5 = 115.82 atm
+    ```commandline
+    ╭─────────┬──────────────────┬───────────────────┬─────────────────┬───────────────────╮
+    │   State │   Velocity [m/s] │   Temperature [K] │   Pressure [Pa] │   Density [kg/m³] │
+    ├─────────┼──────────────────┼───────────────────┼─────────────────┼───────────────────┤
+    │       1 │           1000.0 │             295.0 │       1.013e+05 │             1.828 │
+    │       2 │            163.5 │             771.2 │       1.630e+06 │            11.18  │
+    │       5 │            244.4 │            1222.3 │       1.174e+07 │            49.43  │
+    ╰─────────┴──────────────────┴───────────────────┴─────────────────┴───────────────────╯
     ```
 
 === "Planning"
@@ -29,10 +35,11 @@ PyRGFROSH has two main applications:
     import cantera as ct
     
     shock = FrozenShock.target_conditions(ct.CarbonDioxide(), 1100, 200e5)
-    print(f"P1 = {shock.P1 / 133.322:.0f} torr, u1 = {shock.u1:.1f} m/s")
+    print(f"P1 = {shock.P1 / 133.322:.0f} torr, "
+          f"u1 = {shock.u1:.1f} m/s")
     ```
     
-    which gives the required fill pressure (`P1`) and incident shock velocity (`u1`):
+    which outputs the required fill pressure (`P1`) and incident shock velocity (`u1`):
     
     ```
     P1 = 1687 torr, u1 = 918.9 m/s

@@ -6,6 +6,7 @@ from typing import Tuple
 from typing_extensions import Protocol
 
 import numpy as np
+from tabulate import tabulate
 
 
 _gas_constant: float = 8314.46261815324
@@ -168,6 +169,16 @@ class FrozenShock:
 
         self.u5, self.T5, self.P5, self.rho5 = FrozenShock.reflected_conditions(
             thermo, u1, P1, self.u2, self.T2, self.P2)
+
+    def __str__(self):
+        return tabulate(
+            [["1", self.u1, self.T1, self.P1, self.rho1],
+             ["2", self.u2, self.T2, self.P2, self.rho2],
+             ["5", self.u5, self.T5, self.P5, self.rho5]],
+            headers=["State", "Velocity [m/s]", "Temperature [K]", "Pressure [Pa]", "Density [kg/m\u00b3]"],
+            tablefmt="rounded_outline",
+            floatfmt=("", ".1f", ".1f", ".3e", ".4g"),
+        )
 
     @staticmethod
     def incident_conditions(
