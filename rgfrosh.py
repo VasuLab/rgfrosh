@@ -9,7 +9,7 @@ import numpy as np
 from tabulate import tabulate
 
 
-_gas_constant: float = 8314.46261815324
+GAS_CONSTANT: float = 8314.46261815324
 """Universal gas constant [J/kmol/K]."""
 
 max_iter: int = 1000
@@ -98,14 +98,20 @@ def compressibility_factor(thermo: ThermoInterface, T: float = None, P: float = 
     else:
         T, P = thermo.TP
 
-    return P / (thermo.density_mass * _gas_constant / thermo.mean_molecular_weight * T)
+    return P / (thermo.density_mass * GAS_CONSTANT / thermo.mean_molecular_weight * T)
 
 
 @dataclass(init=False)
 class FrozenShock:
     """
-    Dataclass with fields for relevant properties (velocity, temperature, pressure, and
-    density) for each region associated with a reflecting shock.
+    Dataclass with fields for relevant properties - velocity, temperature, pressure, and
+    density - for each region associated with a reflecting shock.
+
+    !!! Warning
+        The state of the `thermo` argument is modified when the `FrozenShock` object is initialized and
+        whenever the thermodynamic interface at a given state ([`state1`][rgfrosh.FrozenShock.state1],
+        [`state2`][rgfrosh.FrozenShock.state2], [`state5`][rgfrosh.FrozenShock.state5]) is accessed.
+
     """
 
     u1: float
@@ -156,7 +162,8 @@ class FrozenShock:
 
         """
 
-        thermo.TP = T1, P1
+        self.thermo = thermo
+        self.thermo.TP = T1, P1
 
         self.u1 = u1
         self.P1 = P1
@@ -164,7 +171,7 @@ class FrozenShock:
         self.rho1 = thermo.density_mass
 
         self.u2, self.T2, self.P2, self.rho2 = FrozenShock.incident_conditions(
-            thermo, u1, T1, P1)
+            self.thermo, u1, T1, P1)
         self.U2 = self.u1 - self.u2
 
         self.u5, self.T5, self.P5, self.rho5 = FrozenShock.reflected_conditions(
@@ -179,6 +186,24 @@ class FrozenShock:
             tablefmt="rounded_outline",
             floatfmt=("", ".1f", ".1f", ".3e", ".4g"),
         )
+
+    @property
+    def state1(self):
+        """Thermodynamic interface at initial conditions."""
+        self.thermo.TP = self.T1, self.P1
+        return self.thermo
+
+    @property
+    def state2(self):
+        """Thermodynamic interface at post-incident-shock conditions."""
+        self.thermo.TP = self.T2, self.P2
+        return self.thermo
+
+    @property
+    def state5(self):
+        """Thermodynamic interface at post-reflected-shock conditions."""
+        self.thermo.TP = self.T5, self.P5
+        return self.thermo
 
     @staticmethod
     def incident_conditions(
@@ -214,7 +239,7 @@ class FrozenShock:
         nu1 = 1 / thermo.density_mass
         cp1 = thermo.cp_mass
 
-        R = _gas_constant / thermo.mean_molecular_weight
+        R = GAS_CONSTANT / thermo.mean_molecular_weight
         gamma1 = cp1 / (cp1 - R)
 
         # Calculate an initial guess of P2 and T2 with the ideal gas assumption
@@ -304,7 +329,7 @@ class FrozenShock:
 
         # Calculate an initial guess of P5 and T5 with the ideal gas assumption
         cp2 = thermo.cp_mass
-        R = _gas_constant / thermo.mean_molecular_weight
+        R = GAS_CONSTANT / thermo.mean_molecular_weight
         gamma2 = cp2 / (cp2 - R)
 
         eta2 = (gamma2 + 1) / (gamma2 - 1)
@@ -388,9 +413,9 @@ class FrozenShock:
 
         thermo.TP = T1, 101325
         cp1 = thermo.cp_mass
-        R = _gas_constant / thermo.mean_molecular_weight
+        R = GAS_CONSTANT / thermo.mean_molecular_weight
         gamma1 = cp1 / (cp1 - R)
-        a1 = (gamma1 * _gas_constant / thermo.mean_molecular_weight * T1) ** 0.5
+        a1 = (gamma1 * GAS_CONSTANT / thermo.mean_molecular_weight * T1) ** 0.5
 
         a = 2 * (gamma1 - 1) * (3 * gamma1 - 1)
         b = (3 * gamma1 - 1) * (3 - gamma1) - 4 * (gamma1 - 1) ** 2 - (
