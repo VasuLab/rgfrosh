@@ -5,11 +5,11 @@ To cite PyRGFROSH, use the following BibTeX metadata:
 ```
 @software{Kinney_PyRGFROSH_2022,
   author = {Kinney, Cory},
-  doi = {https://doi.org/10.5281/zenodo.7258555},
-  month = {10},
+  doi = {https://doi.org/10.5281/zenodo.7332219},
+  month = {11},
   title = {{PyRGFROSH}},
   url = {https://github.com/VasuLab/PyRGFROSH},
-  version = {0.1.2},
+  version = {0.1.3},
   year = {2022}
 }
 ```
