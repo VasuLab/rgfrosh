@@ -8,7 +8,7 @@
     CHEMKIN[^2]^,^[^3]. 
     
 
-PyRGFROSH is a Python package for calculating conditions behind incident and reflected shock in
+PyRGFROSH is a Python package (`rgfrosh`) for calculating conditions behind incident and reflected shock in
 a shock tube for an arbitrary equation of state. PyRGFROSH requires a thermodynamic interface 
 for calculating mixture properties as a function of temperature and pressure and currently supports:
 
