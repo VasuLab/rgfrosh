@@ -1,4 +1,4 @@
-# Python Real Gas FROzen SHock (PyRGFROSH) Solver
+# Python Real Gas FROzen SHock (RGFROSH) Solver
 
 !!! cite ""
     
@@ -8,8 +8,8 @@
     CHEMKIN[^2]^,^[^3]. 
     
 
-PyRGFROSH is a Python package (`rgfrosh`) for calculating conditions behind incident and reflected shock in
-a shock tube for an arbitrary equation of state. PyRGFROSH requires a thermodynamic interface 
+Python RGFROSH (`rgfrosh`) is a package for calculating conditions behind incident and reflected shock in
+a shock tube for an arbitrary equation of state. RGFROSH requires a thermodynamic interface 
 for calculating mixture properties as a function of temperature and pressure and currently supports:
 
 - [Cantera](https://github.com/cantera/cantera) (natively)
@@ -20,7 +20,7 @@ for calculating mixture properties as a function of temperature and pressure and
 
 ## Installation
 
-PyRGFROSH can be installed using
+RGFROSH can be installed using
 
 ```
 pip install rgfrosh

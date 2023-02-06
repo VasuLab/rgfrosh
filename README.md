@@ -1,4 +1,4 @@
-# Python Real Gas FROzen SHock (PyRGFROSH) Solver
+# Python Real Gas FROzen SHock (RGFROSH) Solver
 
 [![DOI](https://zenodo.org/badge/435992350.svg)](https://zenodo.org/badge/latestdoi/435992350)
 
@@ -7,23 +7,23 @@
 > University by D. F. Davidson and R. K. Hanson using real gas subroutines for 
 > CHEMKIN[^2][^3]. 
 
-PyRGFROSH is a Python package (`rgfrosh`) for calculating conditions behind incident and reflected shock in
-a shock tube for an arbitrary equation of state. PyRGFROSH requires a thermodynamic interface 
+Python RGFROSH (`rgfrosh`) is a package for calculating conditions behind incident and reflected shock in
+a shock tube for an arbitrary equation of state. RGFROSH requires a thermodynamic interface 
 for calculating mixture properties as a function of temperature and pressure and currently supports:
 
 - [Cantera](https://github.com/cantera/cantera)
-- [CoolProp](https://github.com/CoolProp/CoolProp) (see [example](https://vasulab.github.io/PyRGFROSH/guide/#coolprop-example)) 
-- [User-defined interfaces](https://vasulab.github.io/PyRGFROSH/guide/#user-defined-interfaces)
+- [CoolProp](https://github.com/CoolProp/CoolProp) (see [example](https://vasulab.github.io/RGFROSH/guide/#coolprop-example)) 
+- [User-defined interfaces](https://vasulab.github.io/RGFROSH/guide/#user-defined-interfaces)
 
 ## Documentation
 
-The [documentation](https://vasulab.github.io/PyRGFROSH) provides a detailed 
-[user guide](https://vasulab.github.io/PyRGFROSH/guide) and 
-[API reference](https://vasulab.github.io/PyRGFROSH/reference) for the package.
+The [documentation](https://vasulab.github.io/RGFROSH) provides a detailed 
+[user guide](https://vasulab.github.io/RGFROSH/guide) and 
+[API reference](https://vasulab.github.io/RGFROSH/reference) for the package.
 
 ## Installation
 
-PyRGFROSH can be installed using
+RGFROSH can be installed using
 
 ```
 pip install rgfrosh

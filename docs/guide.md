@@ -1,6 +1,6 @@
 # User Guide
 
-The standard shock tube region notation is observed in PyRGFROSH:
+The standard shock tube region notation is observed in Python RGFROSH:
 
 | Region | Description                           |
 | ------ | ------------------------------------- |
@@ -14,7 +14,7 @@ The standard shock tube region notation is observed in PyRGFROSH:
 
 ### Analysis
     
-The primary use case of PyRGFROSH is to calculate shock conditions for an experiment from the initial conditions 
+The primary use case of `rgfrosh` is to calculate shock conditions for an experiment from the initial conditions 
 and measured shock velocity with the [`FrozenShock`][rgfrosh.FrozenShock] class:
 
 ```py hl_lines="4"
@@ -39,7 +39,7 @@ which outputs the following table of conditions:
 
 ### Experiment Planning
     
-PyRGFROSH can be also be used to plan experiments by calculating the required initial conditions for target 
+`rgfrosh` can be also be used to plan experiments by calculating the required initial conditions for target 
 post-reflected-shock conditions with the 
 [`FrozenShock.target_conditions`][rgfrosh.FrozenShock.target_conditions] class method:
 
@@ -62,7 +62,7 @@ P1 = 1687 torr, u1 = 918.9 m/s
 
 ### Cantera
 
-PyRGFROSH natively supports `cantera.ThermoPhase` objects, as shown in the
+`rgfrosh` natively supports `cantera.ThermoPhase` objects, as shown in the
 above examples.
 
 !!! warning
