@@ -2,8 +2,7 @@ __version__ = "0.1.3"
 
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Tuple
-from typing_extensions import Protocol
+from typing import Tuple, Protocol
 
 import numpy as np
 from tabulate import tabulate
