@@ -1,6 +1,7 @@
 # Python Real Gas FROzen SHock (RGFROSH) Solver
 
 [![DOI](https://zenodo.org/badge/435992350.svg)](https://zenodo.org/badge/latestdoi/435992350)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 > This project is a solver for the frozen shock equations[^1] developed in Python at the
 > University of Central Florida. The original RGFROSH was developed in FORTRAN at Stanford 
