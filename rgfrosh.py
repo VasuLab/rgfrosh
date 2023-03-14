@@ -14,7 +14,7 @@ GAS_CONSTANT: float = 8314.46261815324
 max_iter: int = 1000
 """Maximum number of iterations for the solver."""
 
-relative_tolerance: float = 1E-6
+rtol: float = 1E-6
 """Relative tolerance for the solver convergence criteria."""
 
 
@@ -228,7 +228,7 @@ class FrozenShock:
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [`relative_tolerance`][rgfrosh.relative_tolerance] within
+                [`rtol`][rgfrosh.rtol] within
                 [`max_iter`][rgfrosh.max_iter] iterations.
 
         """
@@ -274,8 +274,8 @@ class FrozenShock:
             )
 
             converged = (
-                abs(deltaT2) <= T2 * relative_tolerance and
-                abs(deltaP2) <= P2 * relative_tolerance
+                abs(deltaT2) <= T2 * rtol and
+                abs(deltaP2) <= P2 * rtol
             )
 
             T2 -= deltaT2
@@ -317,7 +317,7 @@ class FrozenShock:
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [`relative_tolerance`][rgfrosh.relative_tolerance] within
+                [`rtol`][rgfrosh.rtol] within
                 [`max_iter`][rgfrosh.max_iter] iterations.
 
         """
@@ -366,8 +366,8 @@ class FrozenShock:
             )
 
             converged = (
-                abs(deltaT5) <= T5 * relative_tolerance and
-                abs(deltaP5) <= P5 * relative_tolerance
+                abs(deltaT5) <= T5 * rtol and
+                abs(deltaP5) <= P5 * rtol
             )
 
             T5 -= deltaT5
@@ -401,7 +401,7 @@ class FrozenShock:
 
         Exceptions:
             ConvergenceError: If the relative change in `u1`, `P1`, `T2`, and `P2`
-                is not below the [`relative_tolerance`][rgfrosh.relative_tolerance]
+                is not below the [`rtol`][rgfrosh.rtol]
                 within [`max_iter`][rgfrosh.max_iter] iterations.
 
         """
@@ -490,10 +490,10 @@ class FrozenShock:
             )
 
             converged = (
-                abs(delta_u1) <= u1 * relative_tolerance and
-                abs(delta_P1) <= P1 * relative_tolerance and
-                abs(delta_T2) <= T2 * relative_tolerance and
-                abs(delta_P2) <= P2 * relative_tolerance
+                abs(delta_u1) <= u1 * rtol and
+                abs(delta_P1) <= P1 * rtol and
+                abs(delta_T2) <= T2 * rtol and
+                abs(delta_P2) <= P2 * rtol
             )
 
             u1 -= delta_u1
