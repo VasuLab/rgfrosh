@@ -61,13 +61,12 @@ def incident_pressure_ratio(M, gamma):
 
 
 def incident_density_ratio(M, gamma):
-    return (gamma + 1) * M ** 2 / ((gamma - 1) * M ** 2 + 2)
+    return (gamma + 1) * M**2 / ((gamma - 1) * M**2 + 2)
 
 
-@pytest.mark.parametrize("gamma,MW", [(7/5, 28), (5/3, 40)])  # [Nitrogen, Argon]
+@pytest.mark.parametrize("gamma,MW", [(7 / 5, 28), (5 / 3, 40)])  # [Nitrogen, Argon]
 @pytest.mark.parametrize("M", [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
 class TestClass:
-
     @pytest.fixture
     def ideal_shock(self, M, gamma, MW):
         perfect_gas = PerfectGas(gamma, MW)

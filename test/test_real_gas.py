@@ -73,5 +73,5 @@ def test_reflected_conditions(gas, u1, P1, T5, P5, rho5):
     assert_allclose(
         [shock.T5, shock.P5 / 101325, shock.rho5],
         [T5, P5, rho5],
-        rtol=1e-3
+        rtol=1e-3,
     )
