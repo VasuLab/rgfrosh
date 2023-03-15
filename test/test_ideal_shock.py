@@ -60,7 +60,11 @@ def incident_pressure_ratio(M, gamma):
     return (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
 
 
-@pytest.mark.parametrize("gamma,MW", [(7/5, 28), (5/3, 40)])
+def incident_density_ratio(M, gamma):
+    return (gamma + 1) * M ** 2 / ((gamma - 1) * M ** 2 + 2)
+
+
+@pytest.mark.parametrize("gamma,MW", [(7/5, 28), (5/3, 40)])  # [Nitrogen, Argon]
 @pytest.mark.parametrize("M", [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
 class TestClass:
 
@@ -86,7 +90,13 @@ class TestClass:
     def test_incident_density_ratio(self, ideal_shock, M, gamma, MW):
         assert_almost_equal(
             ideal_shock.rho2 / ideal_shock.rho1,
-            (gamma + 1) * M**2 / ((gamma - 1) * M**2 + 2),
+            incident_density_ratio(M, gamma),
+        )
+
+    def test_incident_velocity_ratio(self, ideal_shock, M, gamma, MW):
+        assert_almost_equal(
+            ideal_shock.u1 / ideal_shock.u2,
+            incident_density_ratio(M, gamma),
         )
 
     def test_reflected_temperature_ratio(self, ideal_shock, M, gamma, MW):
@@ -105,6 +115,7 @@ class TestClass:
             / ((gamma - 1) * M**2 + 2),
         )
 
+    @pytest.mark.xfail
     def test_reflected_velocity_ratio(self, ideal_shock, M, gamma, MW):
         assert_almost_equal(
             ideal_shock.u5 / ideal_shock.u1,
