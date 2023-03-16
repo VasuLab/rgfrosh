@@ -1,6 +1,9 @@
-black
 numpy
 CoolProp
 tabulate
+
+black
 pytest
 pytest-cov
+mkdocs-material
+mkdocstrings-python
