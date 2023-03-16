@@ -3,3 +3,4 @@ numpy
 CoolProp
 tabulate
 pytest
+pytest-cov

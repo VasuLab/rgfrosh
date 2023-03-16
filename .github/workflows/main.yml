@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run:  |
+        run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -29,3 +29,25 @@ jobs:
         run: |
           pip install pytest
           pytest
+          
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Generate coverage report
+        run: |
+          pytest --cov=rgfrosh .
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+      
