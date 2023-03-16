@@ -55,3 +55,47 @@ class ThermoInterface(Protocol):
         """Thermal expansion coefficient [1/K]."""
         raise NotImplementedError
 
+
+try:
+    import CoolProp as CP
+
+
+    class CPInterface(ThermoInterface):
+        def __init__(self, state: CP.AbstractState):
+            self.state = state
+
+        @property
+        def mean_molecular_weight(self):
+            return self.state.molar_mass() * 1e3  # [kg/mol] to [kg/kmol]
+
+        @property
+        def TP(self):
+            return self.state.T(), self.state.p()
+
+        @TP.setter
+        def TP(self, value):
+            T, P = value
+            self.state.update(CP.PT_INPUTS, P, T)
+
+        @property
+        def density_mass(self):
+            return self.state.rhomass()
+
+        @property
+        def cp_mass(self):
+            return self.state.cpmass()
+
+        @property
+        def enthalpy_mass(self):
+            return self.state.hmass()
+
+        @property
+        def isothermal_compressibility(self):
+            return self.state.isothermal_compressibility()
+
+        @property
+        def thermal_expansion_coeff(self):
+            return self.state.isobaric_expansion_coefficient()
+
+except ImportError:
+    pass

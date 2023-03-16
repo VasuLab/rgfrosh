@@ -6,7 +6,8 @@ Peng-Robinson EOS for nitrogen (from table in the addendum).
 Studies at High Pressures." Israel Journal of Chemistry 36(3): 321-326.
 """
 
-from rgfrosh import ThermoInterface, FrozenShock
+from rgfrosh import FrozenShock
+from rgfrosh.interface import CPInterface
 from numpy.testing import assert_allclose
 import CoolProp as CP
 import pytest
@@ -20,44 +21,6 @@ testdata = [
     (1523, 1, 2338, 145.0, 20.817),
     (1523, 10, 2286, 1432, 181.60),
 ]
-
-
-class CPInterface(ThermoInterface):
-    def __init__(self, state: CP.AbstractState):
-        self.state = state
-
-    @property
-    def mean_molecular_weight(self):
-        return self.state.molar_mass() * 1e3  # [kg/mol] to [kg/kmol]
-
-    @property
-    def TP(self):
-        return self.state.T(), self.state.p()
-
-    @TP.setter
-    def TP(self, value):
-        T, P = value
-        self.state.update(CP.PT_INPUTS, P, T)
-
-    @property
-    def density_mass(self):
-        return self.state.rhomass()
-
-    @property
-    def cp_mass(self):
-        return self.state.cpmass()
-
-    @property
-    def enthalpy_mass(self):
-        return self.state.hmass()
-
-    @property
-    def isothermal_compressibility(self):
-        return self.state.isothermal_compressibility()
-
-    @property
-    def thermal_expansion_coeff(self):
-        return self.state.isobaric_expansion_coefficient()
 
 
 @pytest.fixture
