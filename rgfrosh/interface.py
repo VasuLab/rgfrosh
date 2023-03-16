@@ -59,7 +59,6 @@ class ThermoInterface(Protocol):
 try:
     import CoolProp as CP
 
-
     class CPInterface(ThermoInterface):
         def __init__(self, state: CP.AbstractState):
             self.state = state
