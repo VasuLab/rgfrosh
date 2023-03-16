@@ -5,7 +5,8 @@ for a calorically perfect gas ThermoInterface.
 [1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical physics.
 """
 
-from rgfrosh import ThermoInterface, FrozenShock, GAS_CONSTANT
+from rgfrosh import ThermoInterface, FrozenShock
+from rgfrosh.constants import GAS_CONSTANT
 from numpy.testing import assert_almost_equal
 import pytest
 
