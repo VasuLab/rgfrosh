@@ -21,7 +21,7 @@ class ConvergenceError(Exception):
     """
 
 
-def compressibility_factor(thermo: ThermoInterface, T: float = None, P: float = None):
+def compressibility_factor(thermo: ThermoInterface, T: float = None, P: float = None) -> float:
     r"""
     Calculates the compressibility factor of a gas at a specified state:
 
@@ -181,8 +181,8 @@ class FrozenShock:
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [`rtol`][rgfrosh.rtol] within
-                [`max_iter`][rgfrosh.max_iter] iterations.
+                [`rtol`][rgfrosh.shock.rtol] within
+                [`max_iter`][rgfrosh.shock.max_iter] iterations.
 
         """
 
@@ -269,8 +269,8 @@ class FrozenShock:
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [`rtol`][rgfrosh.rtol] within
-                [`max_iter`][rgfrosh.max_iter] iterations.
+                [`rtol`][rgfrosh.shock.rtol] within
+                [`max_iter`][rgfrosh.shock.max_iter] iterations.
 
         """
 
@@ -344,8 +344,8 @@ class FrozenShock:
 
         Exceptions:
             ConvergenceError: If the relative change in `u1`, `P1`, `T2`, and `P2`
-                is not below the [`rtol`][rgfrosh.rtol]
-                within [`max_iter`][rgfrosh.max_iter] iterations.
+                is not below the [`rtol`][rgfrosh.shock.rtol]
+                within [`max_iter`][rgfrosh.shock.max_iter] iterations.
 
         """
 

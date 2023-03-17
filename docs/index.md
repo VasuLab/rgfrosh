@@ -13,8 +13,10 @@ a shock tube for an arbitrary equation of state. RGFROSH requires a thermodynami
 for calculating mixture properties as a function of temperature and pressure and currently supports:
 
 - [Cantera](https://github.com/cantera/cantera) (natively)
-- [CoolProp](https://github.com/CoolProp/CoolProp) (see [example](guide/#coolprop-example)) 
-- [User-defined interfaces](guide/#user-defined-interfaces)
+- [CoolProp](https://github.com/CoolProp/CoolProp) (using the built-in
+  [wrapper](./reference/interface/#rgfrosh.interface.CPInterface) - see 
+  [example](./guide/interfaces/#coolprop))
+- [User-defined interfaces](guide/interfaces/#user-defined-interfaces)
 
 
 
@@ -26,7 +28,42 @@ RGFROSH can be installed using
 pip install rgfrosh
 ```
 
-which also installs required dependencies.
+which also installs required dependencies. Cantera or CoolProp are optional and will 
+need to be installed separately if desired.
+
+## Contributing
+
+For any bugs or feature requests, create an issue on the 
+[issue tracker](https://github.com/VasuLab/RGFROSH/issues). 
+
+After cloning the repository, the development environment can be set up with
+
+```
+pip install -r requirements.txt
+```
+
+Before creating a pull request, be sure to lint
+
+```
+black .
+```
+
+and run the automated tests
+
+```
+pytest
+```
+
+These checks will be performed automatically for all pull requests along
+with test coverage comparisons.
+
+## Cite
+
+To cite Python RGFROSH go to the [GitHub repository](https://github.com/VasuLab/RGFROSH) and click 
+<kbd>Cite this repository</kbd> on the right side to export the citation for the latest release of 
+`rgfrosh`. It is also encouraged to cite the original paper[^1] for the frozen shock equations that
+this work is a derivative of.
+
 
 [^1]: Davidson, D.F. and Hanson, R.K. (1996), Real Gas Corrections in Shock Tube Studies 
 at High Pressures. Isr. J. Chem., 36: 321-326. 

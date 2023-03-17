@@ -8,9 +8,13 @@ nav:
   - Home:
       - index.md
       - License: license.md
-      - Citation: citation.md
-  - User Guide: guide.md
-  - API Reference: reference.md
+  - User Guide:
+    - guide/index.md
+    - Interfaces: guide/interfaces.md
+  - API Reference:
+    - rgfrosh.shock: reference/shock.md
+    - rgfrosh.interface: reference/interface.md
+    - rgfrosh.constants: reference/constants.md
 
 theme:
   name: material
@@ -37,7 +41,7 @@ theme:
     - content.code.annotate
     - navigation.indexes
     - navigation.tabs
-    - toc.integrate
+    - toc.follow
 
 plugins:
   - search
@@ -49,14 +53,19 @@ plugins:
             members_order: source
             merge_init_into_class: true
             show_signature_annotations: true
-            show_root_full_path: false
             show_root_heading: true
+            show_root_full_path: false
             show_source: false
 
 markdown_extensions:
   - abbr
+  - attr_list
   - admonition
   - footnotes
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.caret
@@ -67,6 +76,9 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tilde
+
+watch:
+  - rgfrosh
 
 extra:
   generator: false

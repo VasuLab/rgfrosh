@@ -60,6 +60,17 @@ try:
     import CoolProp as CP
 
     class CPInterface(ThermoInterface):
+        """
+        :octicons-tag-24: 0.1.4
+
+        Wrapper for `CoolProp.AbstractState` objects that accounts for
+        differing property names and automatically adjusts units for
+        `mean_molecular_weight`.
+
+        !!! Note
+            Only available if `CoolProp` is installed.
+        """
+
         def __init__(self, state: CP.AbstractState):
             self.state = state
 
