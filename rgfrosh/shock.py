@@ -21,7 +21,9 @@ class ConvergenceError(Exception):
     """
 
 
-def compressibility_factor(thermo: ThermoInterface, T: float = None, P: float = None) -> float:
+def compressibility_factor(
+    thermo: ThermoInterface, T: float = None, P: float = None
+) -> float:
     r"""
     Calculates the compressibility factor of a gas at a specified state:
 
