@@ -1,11 +1,10 @@
 from .interface import ThermoInterface
 from .constants import GAS_CONSTANT
 
-from dataclasses import dataclass
-from typing import Tuple
+from attrs import frozen
+from typing import Optional, Tuple
 
 import numpy as np
-from tabulate import tabulate
 
 
 max_iter: int = 1000
@@ -45,19 +44,8 @@ def compressibility_factor(
     return P / (thermo.density_mass * GAS_CONSTANT / thermo.mean_molecular_weight * T)
 
 
-@dataclass(init=False)
-class FrozenShock:
-    """
-    Dataclass with fields for relevant properties - velocity, temperature, pressure, and
-    density - for each region associated with a reflecting shock.
-
-    !!! Warning
-        The state of the `thermo` argument is modified when the `FrozenShock` object is initialized and
-        whenever the thermodynamic interface at a given state ([`state1`][rgfrosh.FrozenShock.state1],
-        [`state2`][rgfrosh.FrozenShock.state2], [`state5`][rgfrosh.FrozenShock.state5]) is accessed.
-
-    """
-
+@frozen
+class Shock:
     u1: float
     """Incident shock velocity [m/s]."""
     T1: float
@@ -69,8 +57,6 @@ class FrozenShock:
 
     u2: float
     """Velocity behind the incident shock (shock-fixed) [m/s]."""
-    U2: float
-    """Velocity behind the incident shock (lab frame) [m/s]."""
     T2: float
     """Temperature behind the incident shock [K]."""
     P2: float
@@ -87,77 +73,20 @@ class FrozenShock:
     rho5: float
     """Density behind the reflected shock [kg/m^3^]."""
 
-    def __init__(
-        self,
-        thermo: ThermoInterface,
-        u1: float,
-        T1: float,
-        P1: float,
-    ):
-        """
-        Solves for the post-incident-shock and post-reflected-shock conditions
-        given the initial conditions and incident shock velocity.
+    # TODO
+    # def __str__(self):
+    #     ...
 
-        Parameters:
-            thermo: Thermodynamic interface.
-            u1: Incident shock velocity [m/s].
-            T1: Initial temperature [K].
-            P1: Initial pressure [Pa].
 
-        """
+class FrozenShock(Shock):
+    """
+    Dataclass with fields for relevant properties - velocity, temperature, pressure, and
+    density - for each region associated with a reflecting shock.
 
-        self.thermo = thermo
-        self.thermo.TP = T1, P1
+    !!! Warning
+        The state of the `thermo` argument is modified when the methods are called.
 
-        self.u1 = u1
-        self.P1 = P1
-        self.T1 = T1
-        self.rho1 = thermo.density_mass
-
-        self.u2, self.T2, self.P2, self.rho2 = FrozenShock.incident_conditions(
-            self.thermo, u1, T1, P1
-        )
-        self.U2 = self.u1 - self.u2
-
-        self.u5, self.T5, self.P5, self.rho5 = FrozenShock.reflected_conditions(
-            thermo, u1, P1, self.u2, self.T2, self.P2
-        )
-
-    def __str__(self):
-        return tabulate(
-            [
-                ["1", self.u1, self.T1, self.P1, self.rho1],
-                ["2", self.u2, self.T2, self.P2, self.rho2],
-                ["5", self.u5, self.T5, self.P5, self.rho5],
-            ],
-            headers=[
-                "State",
-                "Velocity [m/s]",
-                "Temperature [K]",
-                "Pressure [Pa]",
-                "Density [kg/m\u00b3]",
-            ],
-            tablefmt="simple_outline",
-            floatfmt=("", ".1f", ".1f", ".3e", ".4g"),
-        )
-
-    @property
-    def state1(self):
-        """Thermodynamic interface at initial conditions."""
-        self.thermo.TP = self.T1, self.P1
-        return self.thermo
-
-    @property
-    def state2(self):
-        """Thermodynamic interface at post-incident-shock conditions."""
-        self.thermo.TP = self.T2, self.P2
-        return self.thermo
-
-    @property
-    def state5(self):
-        """Thermodynamic interface at post-reflected-shock conditions."""
-        self.thermo.TP = self.T5, self.P5
-        return self.thermo
+    """
 
     @staticmethod
     def incident_conditions(
@@ -330,9 +259,9 @@ class FrozenShock:
 
         raise ConvergenceError
 
-    @classmethod
-    def target_conditions(
-        cls, thermo: ThermoInterface, T5: float, P5: float, T1: float = 300
+    @staticmethod
+    def initial_conditions(
+        thermo: ThermoInterface, T5: float, P5: float, T1: float = 300
     ):
         """
         Solves for the initial pressure and incident shock velocity given the target
@@ -479,6 +408,14 @@ class FrozenShock:
             P2 -= delta_P2
 
             if converged:
-                return cls(thermo, u1, T1, P1)
+                thermo.TP = T1, P1
+                rho1 = thermo.density_mass
+                thermo.TP = T2, P2
+                rho2 = thermo.density_mass
+
+                u2 = u1 * rho1 / rho2
+                u5 = (u1 - u2) / (nu2 / nu5 - 1)
+
+                return u1, P1, u2, T2, P2, u5
 
         raise ConvergenceError
