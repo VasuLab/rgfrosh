@@ -77,6 +77,44 @@ class Shock:
     # def __str__(self):
     #     ...
 
+class IdealShock(Shock):
+    @staticmethod
+    def incident_temperature_ratio(M, gamma):
+        return (
+            (gamma * M**2 - (gamma - 1) / 2)
+            * ((gamma - 1) / 2 * M**2 + 1)
+            / ((gamma + 1) / 2 * M) ** 2
+        )
+
+    @staticmethod
+    def incident_pressure_ratio(M, gamma):
+        return (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
+
+    @staticmethod
+    def incident_density_ratio(M, gamma):
+        return (gamma + 1) * M**2 / ((gamma - 1) * M**2 + 2)
+
+    @staticmethod
+    def reflected_temperature_ratio(M, gamma):
+        return (
+            (2 * (gamma - 1) * M**2 + 3 - gamma)
+            * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
+            / ((gamma + 1) * M) ** 2
+        )
+
+    @staticmethod
+    def reflected_pressure_ratio(M, gamma):
+        return (
+            IdealShock.incident_pressure_ratio(M, gamma)
+            * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
+            / ((gamma - 1) * M**2 + 2)
+        )
+
+    @staticmethod
+    def reflected_velocity_ratio(M, gamma):
+        P12 = 1 / IdealShock.incident_pressure_ratio(M, gamma)
+        return (2 + 2 * P12 / (gamma - 1)) / ((gamma + 1) / (gamma - 1) - P12)
+
 
 class FrozenShock(Shock):
     """
