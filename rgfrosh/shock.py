@@ -78,8 +78,164 @@ class Shock:
     #     ...
 
 class IdealShock(Shock):
+    """
+    A class for calculating properties in various regions of an ideal reflected shock. Most of
+    the equations implemented were derived in Gaydon and Hurle[^1].
+
+    [^1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical
+    physics, Reinhold Publishing Corporation.
+    """
+
+    def __init__(
+        self,
+        gamma: float,
+        MW: float,
+        *,
+        M: float = None,
+        u1: float = None,
+        T1: float = 300,
+        P1: float = None,
+        T5: float = None,
+        P5: float = None,
+    ):
+        r"""
+        Solves the ideal shock equations for the following combination of parameters:
+
+        1. Incident shock Mach number ($M$), or incident shock velocity ($u_1$), and initial conditions ($T_1$, $P_1$)
+        2. Reflected shock conditions ($T_5$, $P_5$) and initial temperature ($T_1$)
+
+        given the mixture's specific heat ratio ($\gamma$) and mean molecular weight ($\overline{M}$).
+        Density is calculated using the ideal gas law:
+
+        $$
+        \rho = \frac{P}{RT}
+        $$
+
+        where $R$ is the specific gas constant:
+
+        $$
+        R = R_\text{universal}/\overline{M}
+        $$
+
+        The speed of sound ($a$) is calculated as:
+
+        $$
+        a = \sqrt{\gamma R T}
+        $$
+
+        Arguments:
+            gamma: Specific heat ratio.
+            MW: Molecular weight [g/mol].
+
+        Keyword arguments:
+            u1: Incident shock velocity [m/s].
+            M: Incident shock Mach number.
+            T1: Initial temperature [K].
+            P1: Initial pressure [Pa].
+            T5: Temperature behind the reflected shock [K].
+            P5: Pressure behind the reflected shock [Pa].
+
+        Raises:
+            ValueError: If the system is underconstrained/overconstrained.
+
+        """
+
+        R = GAS_CONSTANT / MW
+        a1 = (gamma * R * T1)**0.5
+
+        if (M and T1 and P1) or (u1 and T1 and P1):
+            if (M and u1) or T5 or P5:
+                raise ValueError("Overconstrained - too many arguments provided.")
+
+            if M:
+                u1 = M * a1
+            else:
+                M = u1 / a1
+
+            P5 = P1 * IdealShock.reflected_pressure_ratio(M, gamma)
+            T5 = T1 * IdealShock.reflected_temperature_ratio(M, gamma)
+
+        elif T5 and P5 and T1:
+            if P1 or M or u1:
+                raise ValueError("Overconstrained - too many arguments provided.")
+
+            M = IdealShock.incident_Mach_number(gamma, T5, T1)
+            u1 = M * a1
+            P1 = P5 / IdealShock.reflected_pressure_ratio(M, gamma)
+
+        else:
+            raise ValueError("Underconstrained - insufficient arguments provided.")
+
+        P2 = P1 * IdealShock.incident_pressure_ratio(M, gamma)
+        T2 = T1 * IdealShock.incident_temperature_ratio(M, gamma)
+
+        rho1 = P1 / (R * T1)
+        rho2 =  P2 / (R * T2)
+        rho5 = P5 / (R * T5)
+
+        u2 = u1 / IdealShock.incident_density_ratio(M, gamma)
+        u5 = u1 * IdealShock.reflected_velocity_ratio(M, gamma)
+
+        super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5)
+
+    @classmethod
+    def from_thermo(cls, thermo: ThermoInterface, **kwargs):
+        r"""
+        Alternative constructor from a `ThermoInterface` object.
+
+        For an ideal gas, the specific heat at constant volume ($c_v$) is related to the specific heat
+        at constant pressure ($c_p$) by the gas constant ($R$):
+
+        $$
+        c_p = c_v + R
+        $$
+
+        therefore, the specific heat ratio ($\gamma$) is calculated from the available properties as:
+
+        $$
+        \gamma = \frac{c_p}{c_p - R}
+        $$
+
+        !!! Note
+            $c_p$ is evaluated at the current state of the `thermo` object; therefore, the
+            calculated $\gamma$ may differ from the nominal value.
+        """
+        gamma = thermo.cp_mass / (thermo.cp_mass - GAS_CONSTANT / thermo.mean_molecular_weight)
+        return cls(gamma, thermo.mean_molecular_weight, **kwargs)
+
     @staticmethod
-    def incident_temperature_ratio(M, gamma):
+    def incident_pressure_ratio(M: float, gamma: float) -> float:
+        r"""
+        Calculates the pressure ratio across the incident shock:
+
+        $$
+        \frac{P_2}{P_1} = \frac{2\gamma M^2-(\gamma-1)}{\gamma+1}
+        $$
+
+        Parameters:
+            M: Incident shock Mach number.
+            gamma: Specific heat ratio.
+        """
+        return (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
+
+    @staticmethod
+    def incident_temperature_ratio(M: float, gamma: float) -> float:
+        r"""
+        Calculates the temperature ratio across the incident shock:
+
+        $$
+        \frac{T_2}{T_1} = \frac{
+            \left(\gamma M^2 - \frac{\gamma-1}{2}\right)
+            \left(\frac{\gamma-1}{2}M^2+1\right)
+        }{
+            \left(\frac{\gamma+1}{2}\right)^2 M^2
+        }
+        $$
+
+        Parameters:
+            M: Incident shock Mach number.
+            gamma: Specific heat ratio.
+        """
         return (
             (gamma * M**2 - (gamma - 1) / 2)
             * ((gamma - 1) / 2 * M**2 + 1)
@@ -87,15 +243,61 @@ class IdealShock(Shock):
         )
 
     @staticmethod
-    def incident_pressure_ratio(M, gamma):
-        return (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
+    def incident_density_ratio(M: float, gamma: float) -> float:
+        r"""
+        Calculates the density ratio across the incident shock:
 
-    @staticmethod
-    def incident_density_ratio(M, gamma):
+        $$
+        \frac{\rho_2}{\rho_1} = \frac {(\gamma+1)M^2} {(\gamma-1)M^2+2}
+        $$
+
+        which is also the velocity ratio across the incident shock:
+
+        $$
+        \frac{u_1}{u_2} = \frac{\rho_2}{\rho_1}
+        $$
+
+        Parameters:
+            M: Incident shock Mach number.
+            gamma: Specific heat ratio.
+        """
         return (gamma + 1) * M**2 / ((gamma - 1) * M**2 + 2)
 
     @staticmethod
-    def reflected_temperature_ratio(M, gamma):
+    def reflected_pressure_ratio(M: float, gamma: float) -> float:
+        r"""
+        Calculates the ratio of the reflected shock pressure to the initial pressure:
+
+        $$
+        \frac{P_5}{P_1} = \left[\frac{2\gamma M^2-(\gamma-1)}{\gamma+1}\right]
+        \left[\frac{(3\gamma-1)M^2-2(\gamma-1)}{(\gamma-1)M^2+2}\right]
+        $$
+
+        Parameters:
+            M: Incident shock Mach number.
+            gamma: Specific heat ratio.
+        """
+        return (
+            (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
+            * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
+            / ((gamma - 1) * M**2 + 2)
+        )
+
+    @staticmethod
+    def reflected_temperature_ratio(M: float, gamma: float) -> float:
+        r"""
+        Calculates the ratio of the reflected shock temperature to the initial temperature:
+
+        $$
+        \frac{T_5}{T_1} = \frac{\left[2(\gamma-1)M^2+(3-\gamma)\right]
+        \left[(3\gamma-1)M^2-2(\gamma-1)\right]}
+        {(\gamma+1)^2M^2}
+        $$
+
+        Parameters:
+            M: Incident shock Mach number.
+            gamma: Specific heat ratio.
+        """
         return (
             (2 * (gamma - 1) * M**2 + 3 - gamma)
             * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
@@ -103,17 +305,69 @@ class IdealShock(Shock):
         )
 
     @staticmethod
-    def reflected_pressure_ratio(M, gamma):
-        return (
-            IdealShock.incident_pressure_ratio(M, gamma)
-            * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
-            / ((gamma - 1) * M**2 + 2)
-        )
+    def reflected_velocity_ratio(M: float, gamma: float) -> float:
+        r"""
+        Calculates the ratio of the reflected shock velocity to the incident shock velocity:
 
-    @staticmethod
-    def reflected_velocity_ratio(M, gamma):
+        $$
+        \frac{V_R}{V_S} = \frac{2+\frac{2}{\gamma-1}\frac{P_1}{P_2}}
+        {\frac{\gamma+1}{\gamma-1}-\frac{P_1}{P_2}}
+        $$
+
+        Parameters:
+            M: Incident shock Mach number.
+            gamma: Specific heat ratio.
+        """
         P12 = 1 / IdealShock.incident_pressure_ratio(M, gamma)
         return (2 + 2 * P12 / (gamma - 1)) / ((gamma + 1) / (gamma - 1) - P12)
+
+    @staticmethod
+    def incident_Mach_number(gamma: float, T5: float, T1: float = 1):
+        r"""
+        Calculates the incident shock Mach number from the ratio of the reflected shock
+        temperature to the initial temperature. Expanding the equation for the reflected temperature
+        ratio yields an equation of the form:
+
+        $$
+        aM^4 + bM^2 + c = 0
+        $$
+
+        where
+
+        $$
+        a = 2(3\gamma-1)(\gamma-1)
+        $$
+
+        $$
+        b = (3\gamma-1)(3-\gamma) - 4(\gamma-1)^2 - \frac{T_5}{T_1}(\gamma+1)^2
+        $$
+
+        $$
+        c = -2(3-\gamma)(\gamma-1)
+        $$
+
+        Solving the above equation for $M^2$ using the quadratic formula, then taking the square
+        root of the non-negative solution, yields the incident shock Mach number for the given
+        temperature ratio:
+
+        $$
+        M = \sqrt{\frac{-b + \sqrt{b^2-4ac}}{2a}}
+        $$
+
+        Parameters:
+            gamma: Specific heat ratio.
+            T5: Reflected shock temperature [K].
+            T1: Initial temperature [K].
+
+        !!! Note
+            If `T1` is not specified, it is assumed that the temperature ratio ${T_5}/{T_1}$ is given as `T5`.
+
+        """
+        a = 2 * (gamma - 1) * (3 * gamma - 1)
+        b = (3 * gamma - 1) * (3 - gamma) - 4 * (gamma - 1) ** 2 - (gamma + 1) ** 2 * T5 / T1
+        c = -2 * (gamma - 1) * (3 - gamma)
+
+        return ((-b + (b ** 2 - 4 * a * c) ** 0.5) / (2 * a)) ** 0.5
 
 
 class FrozenShock(Shock):
