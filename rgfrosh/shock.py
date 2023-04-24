@@ -126,7 +126,7 @@ class IdealShock(Shock):
         """
 
         R = GAS_CONSTANT / MW
-        a1 = (gamma * R * T1)**0.5
+        a1 = (gamma * R * T1) ** 0.5
 
         if (M and T1 and P1) or (u1 and T1 and P1):
             if (M and u1) or T5 or P5:
@@ -155,7 +155,7 @@ class IdealShock(Shock):
         T2 = T1 * IdealShock.incident_temperature_ratio(M, gamma)
 
         rho1 = P1 / (R * T1)
-        rho2 =  P2 / (R * T2)
+        rho2 = P2 / (R * T2)
         rho5 = P5 / (R * T5)
 
         u2 = u1 / IdealShock.incident_density_ratio(M, gamma)
@@ -185,7 +185,9 @@ class IdealShock(Shock):
             $c_p$ is evaluated at the current state of the `thermo` object; therefore, the
             calculated $\gamma$ may differ from the nominal value.
         """
-        gamma = thermo.cp_mass / (thermo.cp_mass - GAS_CONSTANT / thermo.mean_molecular_weight)
+        gamma = thermo.cp_mass / (
+            thermo.cp_mass - GAS_CONSTANT / thermo.mean_molecular_weight
+        )
         return cls(gamma, thermo.mean_molecular_weight, **kwargs)
 
     @staticmethod
@@ -263,7 +265,8 @@ class IdealShock(Shock):
             gamma: Specific heat ratio.
         """
         return (
-            (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
+            (2 * gamma * M**2 - (gamma - 1))
+            / (gamma + 1)
             * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
             / ((gamma - 1) * M**2 + 2)
         )
@@ -349,10 +352,14 @@ class IdealShock(Shock):
 
         """
         a = 2 * (gamma - 1) * (3 * gamma - 1)
-        b = (3 * gamma - 1) * (3 - gamma) - 4 * (gamma - 1) ** 2 - (gamma + 1) ** 2 * T5 / T1
+        b = (
+            (3 * gamma - 1) * (3 - gamma)
+            - 4 * (gamma - 1) ** 2
+            - (gamma + 1) ** 2 * T5 / T1
+        )
         c = -2 * (gamma - 1) * (3 - gamma)
 
-        return ((-b + (b ** 2 - 4 * a * c) ** 0.5) / (2 * a)) ** 0.5
+        return ((-b + (b**2 - 4 * a * c) ** 0.5) / (2 * a)) ** 0.5
 
 
 class FrozenShock(Shock):
@@ -384,7 +391,7 @@ class FrozenShock(Shock):
         T1: float = 300,
         P1: float = None,
         T5: float = None,
-        P5: float = None
+        P5: float = None,
     ):
         """
         Solves the frozen shock equations for the following combination of parameters:
@@ -495,7 +502,10 @@ class FrozenShock(Shock):
                 np.array([f1, f2]),
             )
 
-            converged = abs(deltaT2) <= T2 * FrozenShock.rtol and abs(deltaP2) <= P2 * FrozenShock.rtol
+            converged = (
+                abs(deltaT2) <= T2 * FrozenShock.rtol
+                and abs(deltaP2) <= P2 * FrozenShock.rtol
+            )
 
             T2 -= deltaT2
             P2 -= deltaP2
@@ -582,7 +592,10 @@ class FrozenShock(Shock):
                 np.array([f3, f4]),
             )
 
-            converged = abs(deltaT5) <= T5 * FrozenShock.rtol and abs(deltaP5) <= P5 * FrozenShock.rtol
+            converged = (
+                abs(deltaT5) <= T5 * FrozenShock.rtol
+                and abs(deltaP5) <= P5 * FrozenShock.rtol
+            )
 
             T5 -= deltaT5
             P5 -= deltaP5
@@ -596,9 +609,7 @@ class FrozenShock(Shock):
         raise ConvergenceError
 
     @staticmethod
-    def solve_initial(
-        thermo: ThermoInterface, T5: float, P5: float, T1: float = 300
-    ):
+    def solve_initial(thermo: ThermoInterface, T5: float, P5: float, T1: float = 300):
         """
         Solves for the initial pressure and incident shock velocity given the target
         post-reflected-shock conditions.
