@@ -1,23 +1,11 @@
 from .interface import ThermoInterface
 from .constants import GAS_CONSTANT
+from .errors import ConvergenceError
 
 from attrs import frozen
-from typing import Optional, Tuple
+from typing import Tuple
 
 import numpy as np
-
-
-max_iter: int = 1000
-"""Maximum number of iterations for the solver."""
-
-rtol: float = 1e-6
-"""Relative tolerance for the solver convergence criteria."""
-
-
-class ConvergenceError(Exception):
-    """
-    Exception raised when the iterative solver fails to converge.
-    """
 
 
 def compressibility_factor(
@@ -27,7 +15,7 @@ def compressibility_factor(
     Calculates the compressibility factor of a gas at a specified state:
 
     $$
-    Z = \frac{P}{\rho R_{specific} T}
+    Z = \frac{P}{\rho RT}
     $$
 
     Parameters:
@@ -73,9 +61,6 @@ class Shock:
     rho5: float
     """Density behind the reflected shock [kg/m^3^]."""
 
-    # TODO
-    # def __str__(self):
-    #     ...
 
 class IdealShock(Shock):
     """
@@ -372,16 +357,75 @@ class IdealShock(Shock):
 
 class FrozenShock(Shock):
     """
-    Dataclass with fields for relevant properties - velocity, temperature, pressure, and
-    density - for each region associated with a reflecting shock.
+    A class for calculating properties in various regions of a reflected shock. The
+    [incident](rgfrosh.shock.FrozenShock.solve_incident) and
+    [reflected](rgfrosh.shock.FrozenShock.solve_reflected) solver equations are from Davidson and
+    Hanson[^1]. The equations for the
+    [initial conditions solver](rgfrosh.shock.FrozenShock.solve_initial) were derived in the appendix
+    of the cited dissertation[^2].
 
-    !!! Warning
-        The state of the `thermo` argument is modified when the methods are called.
-
+    [^1]: Davidson, D. F. and R. K. Hanson (1996). "Real Gas Corrections in Shock Tube Studies at
+    High Pressures." Israel Journal of Chemistry 36(3): 321-326.
+    [^2]: Kinney, C. (2022). "Extreme-Pressure Ignition Studies of Methane and Natural Gas with
+    CO2 with Applications in Rockets and Gas Turbines."
     """
 
+    max_iter: int = 1000
+    """Maximum number of iterations for the solver."""
+
+    rtol: float = 1e-6
+    """Relative tolerance for the solver convergence criteria."""
+
+    def __init__(
+        self,
+        thermo: ThermoInterface,
+        *,
+        u1: float = None,
+        T1: float = 300,
+        P1: float = None,
+        T5: float = None,
+        P5: float = None
+    ):
+        """
+        Solves the frozen shock equations for the following combination of parameters:
+
+        1. Incident shock velocity ($u_1$) and initial conditions ($T_1$, $P_1$)
+        2. Reflected shock conditions ($T_5$, $P_5$) and initial temperature ($T_1$)
+
+        given the `ThermoInterface` for a mixture.
+        """
+
+        if u1 and T1 and P1:
+            if T5 or P5:
+                raise ValueError("Overconstrained - too many arguments provided.")
+
+            thermo.TP = T1, P1
+            rho1 = thermo.density_mass
+
+            u2, T2, P2, rho2 = FrozenShock.solve_incident(thermo, u1, T1, P1)
+            u5, T5, P5, rho5 = FrozenShock.solve_reflected(thermo, u1, P1, u2, T2, P2)
+            super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5)
+
+        elif T5 and P5 and T1:
+            if P1 or u1:
+                raise ValueError("Overconstrained - too many arguments provided.")
+
+            u1, P1, u2, T2, P2, u5 = FrozenShock.solve_initial(thermo, T5, P5, T1)
+
+            thermo.TP = T1, P1
+            rho1 = thermo.density_mass
+            thermo.TP = T2, P2
+            rho2 = thermo.density_mass
+            thermo.TP = T5, P5
+            rho5 = thermo.density_mass
+
+            super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5)
+
+        else:
+            raise ValueError("Underconstrained - insufficient arguments provided.")
+
     @staticmethod
-    def incident_conditions(
+    def solve_incident(
         thermo: ThermoInterface,
         u1: float,
         T1: float,
@@ -404,8 +448,8 @@ class FrozenShock(Shock):
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [`rtol`][rgfrosh.shock.rtol] within
-                [`max_iter`][rgfrosh.shock.max_iter] iterations.
+                [`rtol`][rgfrosh.shock.FrozenShock.rtol] within
+                [`max_iter`][rgfrosh.shock.FrozenShock.max_iter] iterations.
 
         """
 
@@ -426,7 +470,7 @@ class FrozenShock(Shock):
         )
         P2 = P1 * (2 * gamma1 * M1**2 - (gamma1 - 1)) / (gamma1 + 1)
 
-        for i in range(max_iter):
+        for i in range(FrozenShock.max_iter):
             # Calculate thermodynamic properties at T2, P2 guess
             thermo.TP = T2, P2
             h2 = thermo.enthalpy_mass
@@ -451,7 +495,7 @@ class FrozenShock(Shock):
                 np.array([f1, f2]),
             )
 
-            converged = abs(deltaT2) <= T2 * rtol and abs(deltaP2) <= P2 * rtol
+            converged = abs(deltaT2) <= T2 * FrozenShock.rtol and abs(deltaP2) <= P2 * FrozenShock.rtol
 
             T2 -= deltaT2
             P2 -= deltaP2
@@ -465,7 +509,7 @@ class FrozenShock(Shock):
         raise ConvergenceError
 
     @staticmethod
-    def reflected_conditions(
+    def solve_reflected(
         thermo: ThermoInterface,
         u1: float,
         P1: float,
@@ -492,8 +536,8 @@ class FrozenShock(Shock):
 
         Exceptions:
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
-                [`rtol`][rgfrosh.shock.rtol] within
-                [`max_iter`][rgfrosh.shock.max_iter] iterations.
+                [`rtol`][rgfrosh.shock.FrozenShock.rtol] within
+                [`max_iter`][rgfrosh.shock.FrozenShock.max_iter] iterations.
 
         """
 
@@ -510,7 +554,7 @@ class FrozenShock(Shock):
         P5 = P2 * (eta2 + 2 - P1 / P2) / (1 + eta2 * P1 / P2)
         T5 = T2 * P5 / P2 * (eta2 + P5 / P2) / (1 + eta2 * P5 / P2)
 
-        for i in range(max_iter):
+        for i in range(FrozenShock.max_iter):
             thermo.TP = T5, P5
 
             h5 = thermo.enthalpy_mass
@@ -538,7 +582,7 @@ class FrozenShock(Shock):
                 np.array([f3, f4]),
             )
 
-            converged = abs(deltaT5) <= T5 * rtol and abs(deltaP5) <= P5 * rtol
+            converged = abs(deltaT5) <= T5 * FrozenShock.rtol and abs(deltaP5) <= P5 * FrozenShock.rtol
 
             T5 -= deltaT5
             P5 -= deltaP5
@@ -552,7 +596,7 @@ class FrozenShock(Shock):
         raise ConvergenceError
 
     @staticmethod
-    def initial_conditions(
+    def solve_initial(
         thermo: ThermoInterface, T5: float, P5: float, T1: float = 300
     ):
         """
@@ -567,8 +611,8 @@ class FrozenShock(Shock):
 
         Exceptions:
             ConvergenceError: If the relative change in `u1`, `P1`, `T2`, and `P2`
-                is not below the [`rtol`][rgfrosh.shock.rtol]
-                within [`max_iter`][rgfrosh.shock.max_iter] iterations.
+                is not below the [`rtol`][rgfrosh.shock.FrozenShock.rtol]
+                within [`max_iter`][rgfrosh.shock.FrozenShock.max_iter] iterations.
 
         """
 
@@ -607,7 +651,7 @@ class FrozenShock(Shock):
             / ((gamma1 + 1) / 2 * MS) ** 2
         )
 
-        for i in range(max_iter):
+        for i in range(FrozenShock.max_iter):
             thermo.TP = T1, P1
             h1 = thermo.enthalpy_mass
             nu1 = 1 / thermo.density_mass
@@ -688,10 +732,10 @@ class FrozenShock(Shock):
             )
 
             converged = (
-                abs(delta_u1) <= u1 * rtol
-                and abs(delta_P1) <= P1 * rtol
-                and abs(delta_T2) <= T2 * rtol
-                and abs(delta_P2) <= P2 * rtol
+                abs(delta_u1) <= u1 * FrozenShock.rtol
+                and abs(delta_P1) <= P1 * FrozenShock.rtol
+                and abs(delta_T2) <= T2 * FrozenShock.rtol
+                and abs(delta_P2) <= P2 * FrozenShock.rtol
             )
 
             u1 -= delta_u1
