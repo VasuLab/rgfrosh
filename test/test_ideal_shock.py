@@ -22,12 +22,7 @@ class TestRatios:
     @staticmethod
     @pytest.mark.parametrize(
         ("gamma", "M1", "P2_1"),
-        [
-            (7 / 5, 2.95, 10),
-            (7 / 5, 6.56, 50),
-            (5 / 3, 2.87, 10),
-            (5 / 3, 6.34, 50)
-        ]
+        [(7 / 5, 2.95, 10), (7 / 5, 6.56, 50), (5 / 3, 2.87, 10), (5 / 3, 6.34, 50)],
     )
     def test_incident_pressure_ratio(gamma, M1, P2_1):
         assert_allclose(
@@ -41,8 +36,8 @@ class TestRatios:
             (7 / 5, 2.95, 2.62),
             (7 / 5, 6.56, 9.31),
             (5 / 3, 2.87, 3.42),
-            (5 / 3, 6.34, 13.4)
-        ]
+            (5 / 3, 6.34, 13.4),
+        ],
     )
     def test_incident_temperature_ratio(gamma, M1, T2_1):
         assert_allclose(
@@ -56,8 +51,8 @@ class TestRatios:
             (7 / 5, 2.95, 3.82),
             (7 / 5, 6.56, 5.37),
             (5 / 3, 2.87, 2.92),
-            (5 / 3, 6.34, 3.72)
-        ]
+            (5 / 3, 6.34, 3.72),
+        ],
     )
     def test_incident_density_ratio(gamma, M1, rho2_1):
         assert_allclose(
@@ -71,14 +66,14 @@ class TestRatios:
             (7 / 5, 2.95, 10, 4.95),
             (7 / 5, 6.56, 50, 7.12),
             (5 / 3, 2.87, 10, 4.22),
-            (5 / 3, 6.34, 50, 5.54)
-        ]
+            (5 / 3, 6.34, 50, 5.54),
+        ],
     )
     def test_reflected_pressure_ratio(gamma, M1, P2_1, P5_2):
         assert_allclose(
             IdealShock.reflected_pressure_ratio(M1, gamma),
             P5_2 * P2_1,
-            rtol=TestRatios.rtol
+            rtol=TestRatios.rtol,
         )
 
     @staticmethod
@@ -88,14 +83,14 @@ class TestRatios:
             (7 / 5, 2.95, 2.62, 1.76),
             pytest.param(7 / 5, 6.56, 9.31, 2.28, marks=pytest.mark.xfail),
             (5 / 3, 2.87, 3.42, 1.94),
-            pytest.param(5 / 3, 6.34, 13.4, 2.37, marks=pytest.mark.xfail)
-        ]
+            pytest.param(5 / 3, 6.34, 13.4, 2.37, marks=pytest.mark.xfail),
+        ],
     )
     def test_reflected_temperature_ratio(gamma, M1, T2_1, T5_2):
         assert_allclose(
             IdealShock.reflected_temperature_ratio(M1, gamma),
             T5_2 * T2_1,
-            rtol=TestRatios.rtol
+            rtol=TestRatios.rtol,
         )
 
     @staticmethod
@@ -105,8 +100,8 @@ class TestRatios:
             (7 / 5, 2.95, 0.423),
             (7 / 5, 6.56, 0.351),
             (5 / 3, 2.87, 0.589),
-            (5 / 3, 6.34, 0.517)
-        ]
+            (5 / 3, 6.34, 0.517),
+        ],
     )
     def test_reflected_velocity_ratio(gamma, M1, VR_S):
         assert_allclose(
