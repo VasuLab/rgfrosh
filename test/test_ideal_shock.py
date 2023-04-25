@@ -12,16 +12,18 @@ import pytest
 @pytest.mark.parametrize("M", [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
 def test_consistency(gamma, MW, M):
     """
-    Tests for consistency between the initialization approaches by:
+    Tests for consistency between the initialization approaches using the following steps:
 
-    1. Initializing an object using `M`, `T1`, and `P1`
-    2. Initializing another object using the calculated `T5` and `P5` from step 1
-    3. Checking that all properties are consistent between the objects from steps 1 and 2
+    1. Initialize an `IdealShock` object using `M`, `T1`, and `P1`
+    2. Initialize another `IdealShock` object using the calculated `T5` and `P5` from step 1
+    3. Check that all properties are consistent between the objects from steps 1 and 2
     """
 
     from_initial = IdealShock(gamma, MW, M=M, T1=300, P1=101325)
-    from_target = IdealShock(gamma, MW, T5=from_initial.T5, P5=from_initial.P5, T1=300)
-    
+    from_target = IdealShock(
+        gamma, MW, T5=from_initial.T5, P5=from_initial.P5, T1=from_initial.T1
+    )
+
     assert_allclose(from_initial.u1, from_target.u1)
     assert_allclose(from_initial.T1, from_target.T1)
     assert_allclose(from_initial.P1, from_target.P1)

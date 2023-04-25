@@ -6,6 +6,7 @@ from rgfrosh import ThermoInterface, IdealShock, FrozenShock
 from rgfrosh.thermo import CPInterface
 from rgfrosh.constants import GAS_CONSTANT
 
+import cantera as ct
 import CoolProp as CP
 
 from numpy.testing import assert_almost_equal, assert_allclose
@@ -153,3 +154,36 @@ class TestRealGas:
             [T5, P5, rho5],
             rtol=1e-3,
         )
+
+
+@pytest.mark.parametrize("gas", [ct.Nitrogen(), ct.CarbonDioxide()])
+@pytest.mark.parametrize("u1", [400, 450, 500, 550, 600, 650, 700, 750, 800])
+def test_consistency(gas, u1):
+    """
+    Tests for consistency between the initialization approaches using the following steps:
+
+    1. Initialize a `FrozenShock` object using `M`, `T1`, and `P1`
+    2. Initialize another `FrozenShock` object using the calculated `T5` and `P5` from step 1
+    3. Check that all properties are consistent between the objects from steps 1 and 2
+    """
+
+    gas = ct.Nitrogen()
+    from_initial = FrozenShock(gas, u1=u1, T1=300, P1=101325)
+    from_target = FrozenShock(
+        gas, T5=from_initial.T5, P5=from_initial.P5, T1=from_initial.T1
+    )
+
+    assert_allclose(from_initial.u1, from_target.u1)
+    assert_allclose(from_initial.T1, from_target.T1)
+    assert_allclose(from_initial.P1, from_target.P1)
+    assert_allclose(from_initial.rho1, from_target.rho1)
+
+    assert_allclose(from_initial.u2, from_target.u2)
+    assert_allclose(from_initial.T2, from_target.T2)
+    assert_allclose(from_initial.P2, from_target.P2)
+    assert_allclose(from_initial.rho2, from_target.rho2)
+
+    assert_allclose(from_initial.u5, from_target.u5)
+    assert_allclose(from_initial.T5, from_target.T5)
+    assert_allclose(from_initial.P5, from_target.P5)
+    assert_allclose(from_initial.rho5, from_target.rho5)
