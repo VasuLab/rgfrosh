@@ -13,107 +13,104 @@ class TestRatios:
     Test `IdealShock` against values derived from example calculations in Table II.3 of
     Gaydon and Hurle [^1].
 
-    !!! Note
-        Higher precision values were substituted based on fixed values of $\gamma$ and
-        $P_2/P_1$; the original values are included in comments. Therefore, this test
-        operates as a regression test.
-
     [^1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical
     physics, Reinhold Publishing Corporation.
     """
 
-    atol = 1e-3
+    rtol = 0.5e-2
 
-    arg_names = "gamma,M1,P2_1,P5_2,T2_1,T5_2,rho2_1,rho5_2,VR_S"
-    data = (
-        # 2.95, 10, 4.95, 2.62, 1.76, 3.82, 2.82, 0.423
-        (7 / 5, 2.95200, 10, 4.9375, 2.6230, 1.7634, 3.8125, 2.82, 0.423),
-        # 6.56, 50, 7.12, 9.31, 2.28, 5.37, 3.11, 0.351
-        (
-            7 / 5,
-            6.55744,
-            50,
-            7.1249,
-            9.3022,
-            2.1375,
-            5.3750,
-            3.11,
-            0.351,
-        ),  # T5/T2 discrepancy
-        # 2.87, 10, 4.22, 3.42, 1.94, 2.92, 2.17, 0.589
-        (5 / 3, 2.86356, 10, 4.2144, 3.4147, 1.9386, 2.9286, 2.17, 0.589),
-        # 6.34, 50, 5.54, 13.4, 2.37, 3.72, 2.31, 0.517
-        (
-            5 / 3,
-            6.34035,
-            50,
-            5.5369,
-            13.4326,
-            2.2813,
-            3.7222,
-            2.31,
-            0.517,
-        ),  # T5/T2 discrepancy
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "P2_1"),
+        [
+            (7 / 5, 2.95, 10),
+            (7 / 5, 6.56, 50),
+            (5 / 3, 2.87, 10),
+            (5 / 3, 6.34, 50)
+        ]
     )
-
-    @staticmethod
-    @pytest.mark.parametrize(arg_names, data)
-    def test_incident_pressure_ratio(
-        gamma, M1, P2_1, P5_2, T2_1, T5_2, rho2_1, rho5_2, VR_S
-    ):
+    def test_incident_pressure_ratio(gamma, M1, P2_1):
         assert_allclose(
-            IdealShock.incident_pressure_ratio(M1, gamma), P2_1, atol=TestRatios.atol
+            IdealShock.incident_pressure_ratio(M1, gamma), P2_1, rtol=TestRatios.rtol
         )
 
     @staticmethod
-    @pytest.mark.parametrize(arg_names, data)
-    def test_incident_temperature_ratio(
-        gamma, M1, P2_1, P5_2, T2_1, T5_2, rho2_1, rho5_2, VR_S
-    ):
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "T2_1"),
+        [
+            (7 / 5, 2.95, 2.62),
+            (7 / 5, 6.56, 9.31),
+            (5 / 3, 2.87, 3.42),
+            (5 / 3, 6.34, 13.4)
+        ]
+    )
+    def test_incident_temperature_ratio(gamma, M1, T2_1):
         assert_allclose(
-            IdealShock.incident_temperature_ratio(M1, gamma), T2_1, atol=TestRatios.atol
+            IdealShock.incident_temperature_ratio(M1, gamma), T2_1, rtol=TestRatios.rtol
         )
 
     @staticmethod
-    @pytest.mark.parametrize(arg_names, data)
-    def test_incident_density_ratio(
-        gamma, M1, P2_1, P5_2, T2_1, T5_2, rho2_1, rho5_2, VR_S
-    ):
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "rho2_1"),
+        [
+            (7 / 5, 2.95, 3.82),
+            (7 / 5, 6.56, 5.37),
+            (5 / 3, 2.87, 2.92),
+            (5 / 3, 6.34, 3.72)
+        ]
+    )
+    def test_incident_density_ratio(gamma, M1, rho2_1):
         assert_allclose(
-            IdealShock.incident_density_ratio(M1, gamma), rho2_1, atol=TestRatios.atol
+            IdealShock.incident_density_ratio(M1, gamma), rho2_1, rtol=TestRatios.rtol
         )
 
     @staticmethod
-    @pytest.mark.parametrize(arg_names, data)
-    def test_reflected_pressure_ratio(
-        gamma, M1, P2_1, P5_2, T2_1, T5_2, rho2_1, rho5_2, VR_S
-    ):
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "P2_1", "P5_2"),
+        [
+            (7 / 5, 2.95, 10, 4.95),
+            (7 / 5, 6.56, 50, 7.12),
+            (5 / 3, 2.87, 10, 4.22),
+            (5 / 3, 6.34, 50, 5.54)
+        ]
+    )
+    def test_reflected_pressure_ratio(gamma, M1, P2_1, P5_2):
         assert_allclose(
-            IdealShock.reflected_pressure_ratio(M1, gamma)
-            / IdealShock.incident_pressure_ratio(M1, gamma),
-            P5_2,
-            atol=TestRatios.atol,
+            IdealShock.reflected_pressure_ratio(M1, gamma),
+            P5_2 * P2_1,
+            rtol=TestRatios.rtol
         )
 
     @staticmethod
-    @pytest.mark.parametrize(arg_names, data)
-    def test_reflected_temperature_ratio(
-        gamma, M1, P2_1, P5_2, T2_1, T5_2, rho2_1, rho5_2, VR_S
-    ):
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "T2_1", "T5_2"),
+        [
+            (7 / 5, 2.95, 2.62, 1.76),
+            pytest.param(7 / 5, 6.56, 9.31, 2.28, marks=pytest.mark.xfail),
+            (5 / 3, 2.87, 3.42, 1.94),
+            pytest.param(5 / 3, 6.34, 13.4, 2.37, marks=pytest.mark.xfail)
+        ]
+    )
+    def test_reflected_temperature_ratio(gamma, M1, T2_1, T5_2):
         assert_allclose(
-            IdealShock.reflected_temperature_ratio(M1, gamma)
-            / IdealShock.incident_temperature_ratio(M1, gamma),
-            T5_2,
-            atol=TestRatios.atol,
+            IdealShock.reflected_temperature_ratio(M1, gamma),
+            T5_2 * T2_1,
+            rtol=TestRatios.rtol
         )
 
     @staticmethod
-    @pytest.mark.parametrize(arg_names, data)
-    def test_reflected_velocity_ratio(
-        gamma, M1, P2_1, P5_2, T2_1, T5_2, rho2_1, rho5_2, VR_S
-    ):
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "VR_S"),
+        [
+            (7 / 5, 2.95, 0.423),
+            (7 / 5, 6.56, 0.351),
+            (5 / 3, 2.87, 0.589),
+            (5 / 3, 6.34, 0.517)
+        ]
+    )
+    def test_reflected_velocity_ratio(gamma, M1, VR_S):
         assert_allclose(
-            IdealShock.reflected_velocity_ratio(M1, gamma), VR_S, atol=TestRatios.atol
+            IdealShock.reflected_velocity_ratio(M1, gamma), VR_S, rtol=TestRatios.rtol
         )
 
 
