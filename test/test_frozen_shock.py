@@ -13,6 +13,9 @@ from numpy.testing import assert_almost_equal, assert_allclose
 import pytest
 
 
+FrozenShock.rtol = 1e-9
+
+
 class PerfectGas(ThermoInterface):
     """Thermo interface for a calorically perfect gas."""
 
