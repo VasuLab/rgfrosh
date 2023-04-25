@@ -1,4 +1,4 @@
-from .interface import ThermoInterface
+from .thermo import ThermoInterface
 from .constants import GAS_CONSTANT
 from .errors import ConvergenceError
 
@@ -6,30 +6,6 @@ from attrs import frozen
 from typing import Tuple
 
 import numpy as np
-
-
-def compressibility_factor(
-    thermo: ThermoInterface, T: float = None, P: float = None
-) -> float:
-    r"""
-    Calculates the compressibility factor of a gas at a specified state:
-
-    $$
-    Z = \frac{P}{\rho RT}
-    $$
-
-    Parameters:
-        thermo: Thermodynamic interface.
-        T: Temperature [K].
-        P: Pressure [Pa].
-
-    """
-    if T and P:
-        thermo.TP = T, P
-    else:
-        T, P = thermo.TP
-
-    return P / (thermo.density_mass * GAS_CONSTANT / thermo.mean_molecular_weight * T)
 
 
 @frozen
@@ -60,6 +36,9 @@ class Shock:
     """Pressure behind the reflected shock [Pa]."""
     rho5: float
     """Density behind the reflected shock [kg/m^3^]."""
+
+    MW: float
+    """Mean molecular weight [kg/kmol]."""
 
 
 class IdealShock(Shock):
@@ -161,7 +140,7 @@ class IdealShock(Shock):
         u2 = u1 / IdealShock.incident_density_ratio(M, gamma)
         u5 = u1 * IdealShock.reflected_velocity_ratio(M, gamma)
 
-        super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5)
+        super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5, MW)
 
     @classmethod
     def from_thermo(cls, thermo: ThermoInterface, **kwargs):
@@ -373,8 +352,9 @@ class FrozenShock(Shock):
 
     [^1]: Davidson, D. F. and R. K. Hanson (1996). "Real Gas Corrections in Shock Tube Studies at
     High Pressures." Israel Journal of Chemistry 36(3): 321-326.
-    [^2]: Kinney, C. (2022). "Extreme-Pressure Ignition Studies of Methane and Natural Gas with
-    CO2 with Applications in Rockets and Gas Turbines."
+    [^2]: Kinney, Cory, "Extreme-Pressure Ignition Studies of Methane and Natural Gas with CO2 with
+    Applications in Rockets and Gas Turbines" (2022). Electronic Theses and Dissertations, 2020-. 1033.
+    [https://stars.library.ucf.edu/etd2020/1033](https://stars.library.ucf.edu/etd2020/1033)
     """
 
     max_iter: int = 1000
@@ -402,6 +382,8 @@ class FrozenShock(Shock):
         given the `ThermoInterface` for a mixture.
         """
 
+        MW = thermo.mean_molecular_weight
+
         if u1 and T1 and P1:
             if T5 or P5:
                 raise ValueError("Overconstrained - too many arguments provided.")
@@ -411,7 +393,6 @@ class FrozenShock(Shock):
 
             u2, T2, P2, rho2 = FrozenShock.solve_incident(thermo, u1, T1, P1)
             u5, T5, P5, rho5 = FrozenShock.solve_reflected(thermo, u1, P1, u2, T2, P2)
-            super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5)
 
         elif T5 and P5 and T1:
             if P1 or u1:
@@ -426,10 +407,15 @@ class FrozenShock(Shock):
             thermo.TP = T5, P5
             rho5 = thermo.density_mass
 
-            super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5)
-
         else:
             raise ValueError("Underconstrained - insufficient arguments provided.")
+
+        super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5, MW)
+
+    @property
+    def Z(self):
+        """Compressibility factor ($Z$) at the reflected shock conditions."""
+        return self.P5 / (self.rho5 * GAS_CONSTANT / self.MW * self.T5)
 
     @staticmethod
     def solve_incident(
