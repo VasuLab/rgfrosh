@@ -132,7 +132,7 @@ class TestRealGas:
     Studies at High Pressures." Israel Journal of Chemistry 36(3): 321-326.
     """
 
-    test_data = [
+    data = [
         (762, 1, 814.9, 19.95, 8.303),
         (762, 10, 809.0, 197.37, 78.143),
         (1000, 1, 1208.4, 45.56, 12.732),
@@ -149,7 +149,7 @@ class TestRealGas:
         return CPInterface(state)
 
     @staticmethod
-    @pytest.mark.parametrize("u1,P1,T5,P5,rho5", test_data)
+    @pytest.mark.parametrize("u1,P1,T5,P5,rho5", data)
     def test_reflected_conditions(gas, u1, P1, T5, P5, rho5):
         shock = FrozenShock(gas, u1=u1, T1=293, P1=P1 * 101325)
         assert_allclose(
