@@ -684,14 +684,9 @@ class FrozenShock(Shock):
             )
 
             df3_du1 = 2 * u1 * (1 - nu2 / nu1) ** 2 / (P2 * (nu5 - nu2))
-            df3_dP2 = (
-                (-P5 / P2**2 - u1**2 / (nu1**2 * P2))
-                * ((nu1 - nu2) / (nu5 - nu2))
-                * (
-                    (nu2 * kappa2 * (nu1 + nu2 - 2 * nu5)) / (nu5 - nu2)
-                    + (nu1 - nu2) / P2
-                )
-            )
+            df3_dP2 = -P5 / P2**2 - (
+                u1**2 / (nu1**2 * P2) * (nu1 - nu2) / (nu5 - nu2)
+            ) * (nu2 * kappa2 * (nu1 + nu2 - 2 * nu5) / (nu5 - nu2) + (nu1 - nu2) / P2)
 
             df3_dT2 = (
                 (u1**2 * nu2 * beta2)
