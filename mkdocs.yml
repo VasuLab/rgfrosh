@@ -11,10 +11,15 @@ nav:
   - User Guide:
     - guide/index.md
     - Interfaces: guide/interfaces.md
-  - API Reference:
-    - rgfrosh.shock: reference/shock.md
-    - rgfrosh.interface: reference/interface.md
-    - rgfrosh.constants: reference/constants.md
+  - Reference:
+    - reference/index.md
+    - Shock Models:
+      - reference/shock/index.md
+      - Ideal Shock: reference/shock/ideal.md
+      - Frozen Shock: reference/shock/frozen.md
+    - Thermo: reference/thermo.md
+    - Errors: reference/errors.md
+    - Constants: reference/constants.md
 
 theme:
   name: material
@@ -39,6 +44,8 @@ theme:
     repo: fontawesome/brands/github
   features:
     - content.code.annotate
+    - navigation.expand
+    - navigation.footer
     - navigation.indexes
     - navigation.tabs
     - toc.follow

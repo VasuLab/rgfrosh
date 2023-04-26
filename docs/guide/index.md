@@ -1,17 +1,5 @@
 # User Guide
 
-??? Info "Notation"
-
-    The standard shock tube region notation is observed in `rgfrosh`:
-    
-    | Region | Description                           |
-    | ------ | ------------------------------------- |
-    | 1      | Initial driven gas state              |
-    | 2      | Post-incident-shock driven gas state  | 
-    | 3      | Expanded driver gas state             | 
-    | 4      | Initial driver gas state              |
-    | 5      | Post-reflected-shock driven gas state |
-
 RGFROSH has two primary features:
 
 ### 1. Experiment Analysis

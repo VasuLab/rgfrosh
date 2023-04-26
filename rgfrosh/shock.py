@@ -46,6 +46,8 @@ class IdealShock(Shock):
     A class for calculating properties in various regions of an ideal reflected shock. Most of
     the equations implemented were derived in Gaydon and Hurle[^1].
 
+    !!! New "New in `v0.2.0`"
+
     [^1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical
     physics, Reinhold Publishing Corporation.
     """
@@ -380,6 +382,19 @@ class FrozenShock(Shock):
         2. Reflected shock conditions ($T_5$, $P_5$) and initial temperature ($T_1$)
 
         given the `ThermoInterface` for a mixture.
+
+        Arguments:
+            thermo: Thermodynamic interface.
+
+        Keyword arguments:
+            u1: Incident shock velocity [m/s].
+            T1: Initial temperature [K].
+            P1: Initial pressure [Pa].
+            T5: Temperature behind the reflected shock [K].
+            P5: Pressure behind the reflected shock [Pa].
+
+        Raises:
+            ValueError: If the system is underconstrained/overconstrained.
         """
 
         MW = thermo.mean_molecular_weight
@@ -414,7 +429,11 @@ class FrozenShock(Shock):
 
     @property
     def Z(self):
-        """Compressibility factor ($Z$) at the reflected shock conditions."""
+        """
+        Compressibility factor ($Z$) at the reflected shock conditions.
+
+        !!! New "New in `v0.2.0`"
+        """
         return self.P5 / (self.rho5 * GAS_CONSTANT / self.MW * self.T5)
 
     @staticmethod
@@ -623,30 +642,12 @@ class FrozenShock(Shock):
         gamma1 = cp1 / (cp1 - R)
         a1 = (gamma1 * GAS_CONSTANT / thermo.mean_molecular_weight * T1) ** 0.5
 
-        a = 2 * (gamma1 - 1) * (3 * gamma1 - 1)
-        b = (
-            (3 * gamma1 - 1) * (3 - gamma1)
-            - 4 * (gamma1 - 1) ** 2
-            - (gamma1 + 1) ** 2 * T5 / T1
-        )
-        c = -2 * (gamma1 - 1) * (3 - gamma1)
-
-        MS = ((-b + (b**2 - 4 * a * c) ** 0.5) / (2 * a)) ** 0.5
+        MS = IdealShock.incident_Mach_number(gamma1, T5, T1)
+        P1 = P5 / IdealShock.reflected_pressure_ratio(MS, gamma1)
+        P2 = P1 * IdealShock.incident_pressure_ratio(MS, gamma1)
+        T2 = T1 * IdealShock.incident_temperature_ratio(MS, gamma1)
 
         u1 = MS * a1
-        P1 = P5 * (
-            (gamma1 + 1)
-            / (2 * gamma1 * MS**2 - (gamma1 - 1))
-            * ((gamma1 - 1) * MS**2 + 2)
-            / ((3 * gamma1 - 1) * MS**2 - 2 * (gamma1 - 1))
-        )
-
-        P2 = P1 * (2 * gamma1 * MS**2 - (gamma1 - 1)) / (gamma1 + 1)
-        T2 = T1 * (
-            (gamma1 * MS**2 - (gamma1 - 1) / 2)
-            * ((gamma1 - 1) / 2 * MS**2 + 1)
-            / ((gamma1 + 1) / 2 * MS) ** 2
-        )
 
         for i in range(FrozenShock.max_iter):
             thermo.TP = T1, P1
