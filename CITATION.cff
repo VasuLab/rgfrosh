@@ -3,7 +3,7 @@ authors:
 - family-names: "Kinney"
   given-names: "Cory"
 title: "Python RGFROSH: A frozen shock solver for ideal and real gas equations of state."
-version: 0.1.4
-doi: https://doi.org/10.5281/zenodo.7746672
-date-released: 2023-03-17
+version: 0.2.0
+doi: https://doi.org/10.5281/zenodo.7868412
+date-released: 2023-04-26
 url: "https://github.com/VasuLab/RGFROSH"
