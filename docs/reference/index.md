@@ -4,12 +4,12 @@
 
 The following classes are available at the package level:
 
-- [`FrozenShock`](shock/#rgfrosh.shock.FrozenShock)
-- [`IdealShock`](shock/#rgfrosh.shock.IdealShock)
-- [`ThermoInterface`](thermo/#rgfrosh.thermo.ThermoInterface)
-- [`ConvergenceError`](errors/#errors.ConvergenceError)
+- [`rgfrosh.FrozenShock`](shock/frozen/)
+- [`rgfrosh.IdealShock`](shock/ideal/)
+- [`rgfrosh.ThermoInterface`](thermo/#rgfrosh.thermo.ThermoInterface)
+- [`rgfrosh.ConvergenceError`](errors/#errors.ConvergenceError)
 
-Definitions are contained within the following submodules:
+All definitions are contained within the following submodules:
 
 - [`rgfrosh.shock`](shock/)
 - [`rgfrosh.thermo`](thermo/)
@@ -64,7 +64,7 @@ $$
 h_2 + \tfrac{1}{2} {u_2'}^2 = h_5 + \tfrac{1}{2} {u_5}^2
 $$
 
-where $u_2'$ is the velocity of the gas in the incident shock region relative to the reflected shock
+where $u_2'$ is the velocity of the gas in the incident shock region relative to the reflected shock:
 
 $$
 u_2' = u_5 + u_1 - u_2

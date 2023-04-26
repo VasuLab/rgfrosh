@@ -9,8 +9,8 @@ nav:
       - index.md
       - License: license.md
   - User Guide:
-    - guide/index.md
-    - Interfaces: guide/interfaces.md
+    - Getting Started: guide/getting-started.md
+    - Thermodynamic Interfaces: guide/thermodynamic-interfaces.md
   - Reference:
     - reference/index.md
     - Shock Models:

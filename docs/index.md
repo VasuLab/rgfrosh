@@ -1,4 +1,4 @@
-# Python Real Gas FROzen SHock (RGFROSH) Solver
+# Python Real Gas FROzen SHock (RGFROSH)
 
 !!! cite ""
     
@@ -9,27 +9,19 @@
     
 
 Python RGFROSH (`rgfrosh`) is a package for calculating conditions behind incident and reflected shock in
-a shock tube for an arbitrary equation of state. RGFROSH requires a thermodynamic interface 
-for calculating mixture properties as a function of temperature and pressure and currently supports:
-
-- [Cantera](https://github.com/cantera/cantera) (natively)
-- [CoolProp](https://github.com/CoolProp/CoolProp) (using the built-in
-  [wrapper](./reference/interface/#rgfrosh.interface.CPInterface) - see 
-  [example](./guide/interfaces/#coolprop))
-- [User-defined interfaces](guide/interfaces/#user-defined-interfaces)
-
-
+a shock tube for an arbitrary equation of state. See the [user guide](guide/getting-started) for 
+information on how to get started with `rgfrosh`.
 
 ## Installation
 
-RGFROSH can be installed using
+Python RGFROSH can be installed using
 
 ```
 pip install rgfrosh
 ```
 
-which also installs required dependencies. Cantera or CoolProp are optional and will 
-need to be installed separately if desired.
+which also installs required dependencies. Cantera or CoolProp are optional and must 
+be installed separately if desired.
 
 ## Contributing
 
@@ -60,9 +52,9 @@ with test coverage comparisons.
 ## Cite
 
 To cite Python RGFROSH go to the [GitHub repository](https://github.com/VasuLab/RGFROSH) and click 
-<kbd>Cite this repository</kbd> on the right side to export the citation for the latest release of 
-`rgfrosh`. It is also encouraged to cite the original paper[^1] for the frozen shock equations that
-this work is a derivative of.
+<kbd>Cite this repository</kbd> on the right side of the page to export the citation for the latest 
+release of `rgfrosh`. It is also encouraged to cite the original paper[^1] for the frozen shock 
+equations that this work is a derivative of.
 
 
 [^1]: Davidson, D.F. and Hanson, R.K. (1996), Real Gas Corrections in Shock Tube Studies 

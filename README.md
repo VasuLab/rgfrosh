@@ -1,4 +1,4 @@
-# Python Real Gas FROzen SHock (RGFROSH) Solver
+# Python Real Gas FROzen SHock (RGFROSH)
 
 ![CI](https://github.com/VasuLab/RGFROSH/actions/workflows/main.yml/badge.svg?event=push)
 [![codecov](https://codecov.io/gh/VasuLab/RGFROSH/branch/main/graph/badge.svg?token=00W4E78FDD)](https://codecov.io/gh/VasuLab/RGFROSH)
@@ -15,31 +15,24 @@
 > CHEMKIN[^2][^3]. 
 
 Python RGFROSH (`rgfrosh`) is a package for calculating conditions behind incident and reflected shock in
-a shock tube for an arbitrary equation of state. RGFROSH requires a thermodynamic interface 
-for calculating mixture properties as a function of temperature and pressure and currently supports:
-
-- [Cantera](https://github.com/cantera/cantera)
-- [CoolProp](https://github.com/CoolProp/CoolProp) (using the built-in
-  [wrapper](https://vasulab.github.io/RGFROSH/reference/interface/#rgfrosh.interface.CPInterface) - 
-  see [example](https://vasulab.github.io/RGFROSH/guide/interfaces/#coolprop)) 
-- [User-defined interfaces](https://vasulab.github.io/RGFROSH/guide/interfaces/#user-defined-interfaces)
+a shock tube for an arbitrary equation of state. 
 
 ## Documentation
 
 The [documentation site](https://vasulab.github.io/RGFROSH) provides a detailed 
-[user guide](https://vasulab.github.io/RGFROSH/guide) and 
-[API reference](https://vasulab.github.io/RGFROSH/reference/shock) for the package.
+[user guide](https://vasulab.github.io/RGFROSH/guide/getting-started) and 
+[reference](https://vasulab.github.io/RGFROSH/reference) for the package.
 
 ## Installation
 
-RGFROSH can be installed using
+Python RGFROSH can be installed using
 
 ```
 pip install rgfrosh
 ```
 
-which also installs required dependencies. Cantera or CoolProp are optional and will 
-need to be installed separately if desired.
+which also installs required dependencies. Cantera or CoolProp are optional and must
+be installed separately if desired.
 
 ## Contributing
 
@@ -69,10 +62,9 @@ with test coverage comparisons.
 
 ## Cite
 
-To cite Python RGFROSH go to the [GitHub repository](https://github.com/VasuLab/RGFROSH) and click 
-<kbd>Cite this repository</kbd> on the right side to export the citation for the latest release of 
-`rgfrosh`. It is also encouraged to cite the original paper[^1] for the frozen shock equations that
-this work is a derived from.
+To cite Python RGFROSH click <kbd>Cite this repository</kbd>on the right side of the GitHub repository
+page to export the citation for the latest release of `rgfrosh`. It is also encouraged to cite the 
+original paper[^1] for the frozen shock equations that this work is a derived from.
 
 
 [^1]: Davidson, D.F. and Hanson, R.K. (1996), Real Gas Corrections in Shock Tube Studies 

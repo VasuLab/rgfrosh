@@ -345,7 +345,8 @@ class IdealShock(Shock):
 
 class FrozenShock(Shock):
     """
-    A class for calculating properties in various regions of a reflected shock. The
+    A class for calculating properties in various regions of a reflected shock given
+    the [`ThermoInterface`](../../thermo/#rgfrosh.thermo.ThermoInterface) for a mixture. The
     [incident](rgfrosh.shock.FrozenShock.solve_incident) and
     [reflected](rgfrosh.shock.FrozenShock.solve_reflected) solver equations are from Davidson and
     Hanson[^1]. The equations for the
@@ -380,8 +381,6 @@ class FrozenShock(Shock):
 
         1. Incident shock velocity ($u_1$) and initial conditions ($T_1$, $P_1$)
         2. Reflected shock conditions ($T_5$, $P_5$) and initial temperature ($T_1$)
-
-        given the `ThermoInterface` for a mixture.
 
         Arguments:
             thermo: Thermodynamic interface.
