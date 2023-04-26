@@ -1,7 +1,8 @@
 numpy
+cantera
 CoolProp
 tabulate
-
+attrs
 black
 pytest
 pytest-cov

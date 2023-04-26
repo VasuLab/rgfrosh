@@ -1,3 +1,5 @@
+from .constants import GAS_CONSTANT
+
 from abc import abstractmethod
 from typing import Protocol, Tuple
 
@@ -12,48 +14,65 @@ class ThermoInterface(Protocol):
     @abstractmethod
     def TP(self) -> Tuple[float, float]:
         """Get/set temperature [K] and pressure [Pa]."""
-        raise NotImplementedError
 
     @TP.setter
     @abstractmethod
     def TP(self, value: Tuple[float, float]):
-        raise NotImplementedError
+        """Get/set temperature [K] and pressure [Pa]."""
 
     @property
     @abstractmethod
     def mean_molecular_weight(self) -> float:
         """The mean molecular weight (molar mass) [kg/kmol]."""
-        raise NotImplementedError
 
     @property
     @abstractmethod
     def density_mass(self) -> float:
         """(Mass) density [kg/m^3^]."""
-        raise NotImplementedError
 
     @property
     @abstractmethod
     def cp_mass(self) -> float:
         """Specific heat capacity at constant pressure [J/kg/K]."""
-        raise NotImplementedError
 
     @property
     @abstractmethod
     def enthalpy_mass(self) -> float:
         """Specific enthalpy [J/kg]."""
-        raise NotImplementedError
 
     @property
     @abstractmethod
     def isothermal_compressibility(self) -> float:
         """Isothermal compressibility [1/Pa]."""
-        raise NotImplementedError
 
     @property
     @abstractmethod
     def thermal_expansion_coeff(self) -> float:
         """Thermal expansion coefficient [1/K]."""
-        raise NotImplementedError
+
+
+def compressibility_factor(
+    thermo: ThermoInterface, T: float = None, P: float = None
+) -> float:
+    r"""
+    Calculates the compressibility factor of a gas at a specified state:
+
+    $$
+    Z = \frac{P}{\rho RT}
+    $$
+
+    Parameters:
+        thermo: Thermodynamic interface.
+        T: Temperature [K].
+        P: Pressure [Pa].
+
+    """
+    if T and P:
+        thermo.TP = T, P
+    else:
+        T, P = thermo.TP
+
+    return P / (thermo.density_mass * GAS_CONSTANT / thermo.mean_molecular_weight * T)
 
 
 try:
@@ -63,12 +82,12 @@ try:
         """
         :octicons-tag-24: 0.1.4
 
+        !!! Note
+            Only available if `CoolProp` is installed.
+
         Wrapper for `CoolProp.AbstractState` objects that accounts for
         differing property names and automatically adjusts units for
         `mean_molecular_weight`.
-
-        !!! Note
-            Only available if `CoolProp` is installed.
         """
 
         def __init__(self, state: CP.AbstractState):

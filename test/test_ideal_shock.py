@@ -1,124 +1,141 @@
 """
-Tests that the FrozenShock implementation correctly reduces to the ideal shock equations[^1]
-for a calorically perfect gas ThermoInterface.
-
-[1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical physics.
+Tests for the `IdealShock` class.
 """
 
-from rgfrosh import ThermoInterface, FrozenShock
-from rgfrosh.constants import GAS_CONSTANT
-from numpy.testing import assert_almost_equal
+from rgfrosh import IdealShock
+
+from numpy.testing import assert_allclose
 import pytest
 
 
-class PerfectGas(ThermoInterface):
-    """Thermo interface for a calorically perfect gas."""
+class TestRatios:
+    r"""
+    Test `IdealShock` against values derived from example calculations in Table II.3 of
+    Gaydon and Hurle [^1].
 
-    def __init__(self, gamma, MW):
-        self._T = 300
-        self._P = 101325
-        self._gamma = gamma
-        self._MW = MW
+    [^1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical
+    physics, Reinhold Publishing Corporation.
+    """
 
-    @property
-    def TP(self):
-        return self._T, self._P
+    rtol = 0.5e-2
 
-    @TP.setter
-    def TP(self, value):
-        self._T, self._P = value
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "P2_1"),
+        [(7 / 5, 2.95, 10), (7 / 5, 6.56, 50), (5 / 3, 2.87, 10), (5 / 3, 6.34, 50)],
+    )
+    def test_incident_pressure_ratio(gamma, M1, P2_1):
+        assert_allclose(
+            IdealShock.incident_pressure_ratio(M1, gamma), P2_1, rtol=TestRatios.rtol
+        )
 
-    @property
-    def mean_molecular_weight(self):
-        return self._MW
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "T2_1"),
+        [
+            (7 / 5, 2.95, 2.62),
+            (7 / 5, 6.56, 9.31),
+            (5 / 3, 2.87, 3.42),
+            (5 / 3, 6.34, 13.4),
+        ],
+    )
+    def test_incident_temperature_ratio(gamma, M1, T2_1):
+        assert_allclose(
+            IdealShock.incident_temperature_ratio(M1, gamma), T2_1, rtol=TestRatios.rtol
+        )
 
-    @property
-    def density_mass(self):
-        return self._P / (GAS_CONSTANT / self._MW * self._T)
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "rho2_1"),
+        [
+            (7 / 5, 2.95, 3.82),
+            (7 / 5, 6.56, 5.37),
+            (5 / 3, 2.87, 2.92),
+            (5 / 3, 6.34, 3.72),
+        ],
+    )
+    def test_incident_density_ratio(gamma, M1, rho2_1):
+        assert_allclose(
+            IdealShock.incident_density_ratio(M1, gamma), rho2_1, rtol=TestRatios.rtol
+        )
 
-    @property
-    def cp_mass(self):
-        return self._gamma / (self._gamma - 1) * GAS_CONSTANT / self._MW
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "P2_1", "P5_2"),
+        [
+            (7 / 5, 2.95, 10, 4.95),
+            (7 / 5, 6.56, 50, 7.12),
+            (5 / 3, 2.87, 10, 4.22),
+            (5 / 3, 6.34, 50, 5.54),
+        ],
+    )
+    def test_reflected_pressure_ratio(gamma, M1, P2_1, P5_2):
+        assert_allclose(
+            IdealShock.reflected_pressure_ratio(M1, gamma),
+            P5_2 * P2_1,
+            rtol=TestRatios.rtol,
+        )
 
-    @property
-    def enthalpy_mass(self):
-        return self.cp_mass * self._T
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "T2_1", "T5_2"),
+        [
+            (7 / 5, 2.95, 2.62, 1.76),
+            pytest.param(7 / 5, 6.56, 9.31, 2.28, marks=pytest.mark.xfail),
+            (5 / 3, 2.87, 3.42, 1.94),
+            pytest.param(5 / 3, 6.34, 13.4, 2.37, marks=pytest.mark.xfail),
+        ],
+    )
+    def test_reflected_temperature_ratio(gamma, M1, T2_1, T5_2):
+        assert_allclose(
+            IdealShock.reflected_temperature_ratio(M1, gamma),
+            T5_2 * T2_1,
+            rtol=TestRatios.rtol,
+        )
 
-    @property
-    def isothermal_compressibility(self):
-        return 1 / self._P
-
-    @property
-    def thermal_expansion_coeff(self):
-        return 1 / self._T
-
-    @property
-    def sound_speed(self):
-        return (self._gamma * GAS_CONSTANT / self._MW * self._T) ** 0.5
-
-
-def incident_pressure_ratio(M, gamma):
-    return (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
-
-
-def incident_density_ratio(M, gamma):
-    return (gamma + 1) * M**2 / ((gamma - 1) * M**2 + 2)
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("gamma", "M1", "VR_S"),
+        [
+            (7 / 5, 2.95, 0.423),
+            (7 / 5, 6.56, 0.351),
+            (5 / 3, 2.87, 0.589),
+            (5 / 3, 6.34, 0.517),
+        ],
+    )
+    def test_reflected_velocity_ratio(gamma, M1, VR_S):
+        assert_allclose(
+            IdealShock.reflected_velocity_ratio(M1, gamma), VR_S, rtol=TestRatios.rtol
+        )
 
 
 @pytest.mark.parametrize("gamma,MW", [(7 / 5, 28), (5 / 3, 40)])  # [Nitrogen, Argon]
 @pytest.mark.parametrize("M", [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
-class TestClass:
-    @pytest.fixture
-    def ideal_shock(self, M, gamma, MW):
-        perfect_gas = PerfectGas(gamma, MW)
-        perfect_gas.TP = 300, 101325
-        return FrozenShock(perfect_gas, M * perfect_gas.sound_speed, *perfect_gas.TP)
+def test_consistency(gamma, MW, M):
+    """
+    Tests for consistency between the initialization approaches using the following steps:
 
-    def test_incident_temperature_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.T2 / ideal_shock.T1,
-            (gamma * M**2 - (gamma - 1) / 2)
-            * ((gamma - 1) / 2 * M**2 + 1)
-            / ((gamma + 1) / 2 * M) ** 2,
-        )
+    1. Initialize an `IdealShock` object using `M`, `T1`, and `P1`
+    2. Initialize another `IdealShock` object using the calculated `T5` and `P5` from step 1
+    3. Check that all properties are consistent between the objects from steps 1 and 2
+    """
 
-    def test_incident_pressure_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.P2 / ideal_shock.P1, incident_pressure_ratio(M, gamma)
-        )
+    from_initial = IdealShock(gamma, MW, M=M, T1=300, P1=101325)
+    from_target = IdealShock(
+        gamma, MW, T5=from_initial.T5, P5=from_initial.P5, T1=from_initial.T1
+    )
 
-    def test_incident_density_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.rho2 / ideal_shock.rho1,
-            incident_density_ratio(M, gamma),
-        )
+    assert_allclose(from_initial.u1, from_target.u1)
+    assert_allclose(from_initial.T1, from_target.T1)
+    assert_allclose(from_initial.P1, from_target.P1)
+    assert_allclose(from_initial.rho1, from_target.rho1)
 
-    def test_incident_velocity_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.u1 / ideal_shock.u2,
-            incident_density_ratio(M, gamma),
-        )
+    assert_allclose(from_initial.u2, from_target.u2)
+    assert_allclose(from_initial.T2, from_target.T2)
+    assert_allclose(from_initial.P2, from_target.P2)
+    assert_allclose(from_initial.rho2, from_target.rho2)
 
-    def test_reflected_temperature_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.T5 / ideal_shock.T1,
-            (2 * (gamma - 1) * M**2 + 3 - gamma)
-            * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
-            / ((gamma + 1) * M) ** 2,
-        )
-
-    def test_reflected_pressure_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.P5 / ideal_shock.P1,
-            incident_pressure_ratio(M, gamma)
-            * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
-            / ((gamma - 1) * M**2 + 2),
-        )
-
-    @pytest.mark.xfail
-    def test_reflected_velocity_ratio(self, ideal_shock, M, gamma, MW):
-        assert_almost_equal(
-            ideal_shock.u5 / ideal_shock.u1,
-            (2 + 2 / (gamma - 1) / incident_pressure_ratio(M, gamma))
-            / ((gamma + 1) / (gamma - 1) - 1 / incident_pressure_ratio(M, gamma)),
-        )
+    assert_allclose(from_initial.u5, from_target.u5)
+    assert_allclose(from_initial.T5, from_target.T5)
+    assert_allclose(from_initial.P5, from_target.P5)
+    assert_allclose(from_initial.rho5, from_target.rho5)
