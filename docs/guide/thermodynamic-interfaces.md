@@ -3,11 +3,12 @@
 `rgfrosh` has native support for `cantera.ThermoPhase` instances.
 
 !!! Tip "Notice"
-    The implementations of the Redlich-Kwong (RK) EOS and Peng-Robinson (PR) EOS
-    in Cantera do not yet include definitions for `isothermal_compressibility` and
-    `thermal_expansion_coeff`
-    (see [Cantera/cantera/pull/1421](https://github.com/Cantera/cantera/pull/1421)), thus
-    only the ideal gas EOS is currently supported.
+    The implementations of `isothermal_compressibility` and `thermal_expansion_coeff` for the
+    Redlich-Kwong (RK) EOS and Peng-Robinson (PR) EOS in Cantera were added in 
+    [`931de24`](https://github.com/Cantera/cantera/commit/931de2450e34226a431846a07d7db075939cd7ec).
+    Thus, to use the real gas EOS, you must either wait for the Cantera 3.0 release or build 
+    Cantera from source.
+
 
 ## CoolProp
 

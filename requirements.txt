@@ -1,10 +1,12 @@
 numpy
 cantera
+cairosvg
 CoolProp
 tabulate
 attrs
 black
+pillow
 pytest
 pytest-cov
-mkdocs-material
+mkdocs-material==9.1.15
 mkdocstrings-python
