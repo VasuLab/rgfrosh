@@ -17,7 +17,7 @@
         <link rel="next" href="../../reference/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.12">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
     
     
       
@@ -25,10 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.85bb2934.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.a6bdf11c.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -53,6 +53,32 @@
       
 
     
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Thermodynamic Interfaces - Python RGFROSH" >
+      
+        <meta  property="og:description"  content="None" >
+      
+        <meta  property="og:image"  content="https://vasulab.github.io/RGFROSH/assets/images/social/guide/thermodynamic-interfaces.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://vasulab.github.io/RGFROSH/guide/thermodynamic-interfaces/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Thermodynamic Interfaces - Python RGFROSH" >
+      
+        <meta  name="twitter:description"  content="None" >
+      
+        <meta  name="twitter:image"  content="https://vasulab.github.io/RGFROSH/assets/images/social/guide/thermodynamic-interfaces.png" >
+      
     
     
   </head>
@@ -740,11 +766,11 @@
 <p><code>rgfrosh</code> has native support for <code>cantera.ThermoPhase</code> instances.</p>
 <div class="admonition tip">
 <p class="admonition-title">Notice</p>
-<p>The implementations of the Redlich-Kwong (RK) <abbr title="Equation of State">EOS</abbr> and Peng-Robinson (PR) <abbr title="Equation of State">EOS</abbr>
-in Cantera do not yet include definitions for <code>isothermal_compressibility</code> and
-<code>thermal_expansion_coeff</code>
-(see <a href="https://github.com/Cantera/cantera/pull/1421">Cantera/cantera/pull/1421</a>), thus
-only the ideal gas <abbr title="Equation of State">EOS</abbr> is currently supported.</p>
+<p>The implementations of <code>isothermal_compressibility</code> and <code>thermal_expansion_coeff</code> for the
+Redlich-Kwong (RK) <abbr title="Equation of State">EOS</abbr> and Peng-Robinson (PR) <abbr title="Equation of State">EOS</abbr> in Cantera were added in 
+<a href="https://github.com/Cantera/cantera/commit/931de2450e34226a431846a07d7db075939cd7ec"><code>931de24</code></a>.
+Thus, to use the real gas <abbr title="Equation of State">EOS</abbr>, you must either wait for the Cantera 3.0 release or build 
+Cantera from source.</p>
 </div>
 <h2 id="coolprop">CoolProp</h2>
 <p>The <a href="../../reference/thermo/#rgfrosh.thermo.CPInterface"><code>CPInterface</code></a> wrapper is
@@ -917,7 +943,7 @@ ideal shock solution. We can use the custom interface with the
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.annotate", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs", "toc.follow"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c2be25ad.min.js"></script>
+      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
       
         <script src="../../javascripts/mathjax.js"></script>
       
