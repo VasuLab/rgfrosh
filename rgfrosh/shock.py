@@ -46,8 +46,6 @@ class IdealShock(Shock):
     A class for calculating properties in various regions of an ideal reflected shock. Most of
     the equations implemented were derived in Gaydon and Hurle[^1].
 
-    !!! New "New in `v0.2.0`"
-
     [^1]: Gaydon, A. G. and I. R. Hurle (1963). The shock tube in high-temperature chemical
     physics, Reinhold Publishing Corporation.
     """
@@ -430,8 +428,6 @@ class FrozenShock(Shock):
     def Z(self):
         """
         Compressibility factor ($Z$) at the reflected shock conditions.
-
-        !!! New "New in `v0.2.0`"
         """
         return self.P5 / (self.rho5 * GAS_CONSTANT / self.MW * self.T5)
 
