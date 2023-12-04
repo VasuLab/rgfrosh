@@ -743,3 +743,14 @@ class FrozenShock(Shock):
                 return u1, P1, u2, T2, P2, u5
 
         raise ConvergenceError
+
+
+class NonequilibriumShock(FrozenShock):
+    """
+    A class for calculating properties in various regions of a reflected shock for a vibrationally
+    nonequilibrated gas. The methodology for handling vibrational nonequilibrium is from Campbell et al.[^1]
+
+    [^1]: M. F. Campbell, K. G. Owen, D. F. Davidson, and R. K. Hanson, "Dependence of Calculated Postshock
+    Thermodynamic Variables on Vibrational Equilibrium and Input Uncertainty," Journal of Thermophysics and Heat
+    Transfer, vol. 31, no. 3, pp. 586-608, 2017, doi: 10.2514/1.T4952.
+    """

@@ -16,7 +16,9 @@ nav:
     - Shock Models:
       - reference/shock/index.md
       - Ideal Shock: reference/shock/ideal.md
-      - Frozen Shock: reference/shock/frozen.md
+      - Frozen Shock:
+        - reference/shock/frozen/index.md
+        - Nonequilibrium Shock: reference/shock/frozen/nonequilibrium.md
     - Thermo: reference/thermo.md
     - Errors: reference/errors.md
     - Constants: reference/constants.md

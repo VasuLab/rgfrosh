@@ -1,5 +1,5 @@
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
-from .shock import IdealShock, FrozenShock
+from .shock import IdealShock, FrozenShock, NonequilibriumShock
 from .errors import ConvergenceError
 from .thermo import ThermoInterface

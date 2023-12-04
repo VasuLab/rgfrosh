@@ -5,6 +5,7 @@
 The following classes are available at the package level:
 
 - [`rgfrosh.FrozenShock`](shock/frozen/)
+- [`rgfrosh.NonequilibriumShock`](shock/frozen/nonequilibrium/)
 - [`rgfrosh.IdealShock`](shock/ideal/)
 - [`rgfrosh.ThermoInterface`](thermo/#rgfrosh.thermo.ThermoInterface)
 - [`rgfrosh.ConvergenceError`](errors/#errors.ConvergenceError)
