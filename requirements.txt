@@ -8,5 +8,6 @@ black
 pillow
 pytest
 pytest-cov
-mkdocs-material==9.1.15
+mike
+mkdocs-material
 mkdocstrings-python
