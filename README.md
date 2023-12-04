@@ -21,9 +21,9 @@ even custom equations of state. Additionally, an implementation of the ideal sho
 
 ## Documentation
 
-The [documentation site](https://vasulab.github.io/RGFROSH) provides a detailed 
-[user guide](https://vasulab.github.io/RGFROSH/guide/getting-started) and 
-[reference](https://vasulab.github.io/RGFROSH/reference) for the package.
+The [documentation site](https://vasulab.github.io/RGFROSH/latest) provides a detailed 
+[user guide](https://vasulab.github.io/RGFROSH/latest/guide/getting-started) and 
+[reference](https://vasulab.github.io/RGFROSH/latest/reference) for the package.
 
 ## Installation
 
