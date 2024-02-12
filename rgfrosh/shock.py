@@ -99,21 +99,29 @@ class IdealShock(Shock):
             T5: Temperature behind the reflected shock [K].
             P5: Pressure behind the reflected shock [Pa].
 
-        Raises:
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
             ValueError: If the system is underconstrained/overconstrained.
-
         """
 
         R = GAS_CONSTANT / MW
         a1 = (gamma * R * T1) ** 0.5
+
+        if M and u1:
+            raise ValueError("Overconstrained - either incident shock Mach number or velocity "
+                             "should be given, not both.")
 
         if (M and T1 and P1) or (u1 and T1 and P1):
             if (M and u1) or T5 or P5:
                 raise ValueError("Overconstrained - too many arguments provided.")
 
             if M:
+                if M <= 1:
+                    raise ValueError("Incident shock Mach number must be greater than one.")
                 u1 = M * a1
             else:
+                if u1 <= a1:
+                    raise ValueError("Incident shock velocity must be greater than the speed of sound.")
                 M = u1 / a1
 
             P5 = P1 * IdealShock.reflected_pressure_ratio(M, gamma)
@@ -181,7 +189,12 @@ class IdealShock(Shock):
         Parameters:
             M: Incident shock Mach number.
             gamma: Specific heat ratio.
+
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
         """
+        if M <= 1:
+            raise ValueError("Incident shock Mach number must be greater than one.")
         return (2 * gamma * M**2 - (gamma - 1)) / (gamma + 1)
 
     @staticmethod
@@ -201,7 +214,12 @@ class IdealShock(Shock):
         Parameters:
             M: Incident shock Mach number.
             gamma: Specific heat ratio.
+
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
         """
+        if M <= 1:
+            raise ValueError("Incident shock Mach number must be greater than one.")
         return (
             (gamma * M**2 - (gamma - 1) / 2)
             * ((gamma - 1) / 2 * M**2 + 1)
@@ -226,7 +244,12 @@ class IdealShock(Shock):
         Parameters:
             M: Incident shock Mach number.
             gamma: Specific heat ratio.
+
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
         """
+        if M <= 1:
+            raise ValueError("Incident shock Mach number must be greater than one.")
         return (gamma + 1) * M**2 / ((gamma - 1) * M**2 + 2)
 
     @staticmethod
@@ -242,7 +265,12 @@ class IdealShock(Shock):
         Parameters:
             M: Incident shock Mach number.
             gamma: Specific heat ratio.
+
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
         """
+        if M <= 1:
+            raise ValueError("Incident shock Mach number must be greater than one.")
         return (
             (2 * gamma * M**2 - (gamma - 1))
             / (gamma + 1)
@@ -264,7 +292,12 @@ class IdealShock(Shock):
         Parameters:
             M: Incident shock Mach number.
             gamma: Specific heat ratio.
+
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
         """
+        if M <= 1:
+            raise ValueError("Incident shock Mach number must be greater than one.")
         return (
             (2 * (gamma - 1) * M**2 + 3 - gamma)
             * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
@@ -284,7 +317,12 @@ class IdealShock(Shock):
         Parameters:
             M: Incident shock Mach number.
             gamma: Specific heat ratio.
+
+        Exceptions:
+            ValueError: If the incident shock Mach number is not greater than one.
         """
+        if M <= 1:
+            raise ValueError("Incident shock Mach number must be greater than one.")
         P12 = 1 / IdealShock.incident_pressure_ratio(M, gamma)
         return (2 + 2 * P12 / (gamma - 1)) / ((gamma + 1) / (gamma - 1) - P12)
 
@@ -390,7 +428,7 @@ class FrozenShock(Shock):
             T5: Temperature behind the reflected shock [K].
             P5: Pressure behind the reflected shock [Pa].
 
-        Raises:
+        Exceptions:
             ValueError: If the system is underconstrained/overconstrained.
         """
 
@@ -454,10 +492,10 @@ class FrozenShock(Shock):
             rho2: Density behind the incident shock [kg/m^3^].
 
         Exceptions:
+            ValueError: If `u1` is not greater than the speed of sound.
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
                 [`rtol`][rgfrosh.shock.FrozenShock.rtol] within
                 [`max_iter`][rgfrosh.shock.FrozenShock.max_iter] iterations.
-
         """
 
         thermo.TP = T1, P1
@@ -470,6 +508,9 @@ class FrozenShock(Shock):
 
         # Calculate an initial guess of P2 and T2 with the ideal gas assumption
         M1 = u1 / (gamma1 * R * T1) ** 0.5
+        if M1 <= 1:
+            raise ValueError("Shock velocity must be greater than the speed of sound.")
+
         T2 = T1 * (
             (gamma1 * M1**2 - (gamma1 - 1) / 2)
             * ((gamma1 - 1) / 2 * M1**2 + 1)
@@ -548,7 +589,6 @@ class FrozenShock(Shock):
             ConvergenceError: If the relative change in `T5` and `P5` is not below the
                 [`rtol`][rgfrosh.shock.FrozenShock.rtol] within
                 [`max_iter`][rgfrosh.shock.FrozenShock.max_iter] iterations.
-
         """
 
         thermo.TP = T2, P2
@@ -624,7 +664,6 @@ class FrozenShock(Shock):
             ConvergenceError: If the relative change in `u1`, `P1`, `T2`, and `P2`
                 is not below the [`rtol`][rgfrosh.shock.FrozenShock.rtol]
                 within [`max_iter`][rgfrosh.shock.FrozenShock.max_iter] iterations.
-
         """
 
         thermo.TP = T5, P5

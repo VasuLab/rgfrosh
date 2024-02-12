@@ -8,6 +8,36 @@ from numpy.testing import assert_allclose
 import pytest
 
 
+class TestExceptions:
+    r"""
+    Verify that exceptions are raised when invalid inputs are given.
+    """
+
+    def test_underconstraint(self):
+        with pytest.raises(ValueError) as e_info:
+            IdealShock(1.4, 28)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock(1.4, 28)
+
+    def test_shock_mach_number(self):
+        with pytest.raises(ValueError) as e_info:
+            IdealShock(1.4, 28, M=1, P1=1e5)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock(1.4, 28, u1=0, P1=1e5)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock.incident_pressure_ratio(1, 1.4)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock.incident_temperature_ratio(1, 1.4)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock.incident_density_ratio(1, 1.4)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock.reflected_pressure_ratio(1, 1.4)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock.reflected_temperature_ratio(1, 1.4)
+        with pytest.raises(ValueError) as e_info:
+            IdealShock.reflected_velocity_ratio(1, 1.4)
+
+
 class TestRatios:
     r"""
     Test `IdealShock` against values derived from example calculations in Table II.3 of
