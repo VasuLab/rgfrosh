@@ -9,5 +9,5 @@ pillow
 pytest
 pytest-cov
 mike
-mkdocs-material
-mkdocstrings-python
+mkdocs-material==9.5.13
+mkdocstrings-python==1.9.0

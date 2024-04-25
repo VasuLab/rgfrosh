@@ -1,4 +1,4 @@
-# Python Real Gas FROzen SHock (RGFROSH)
+# `rgfrosh` (Real Gas FROzen SHock)
 
 !!! cite ""
     
@@ -8,7 +8,7 @@
     CHEMKIN[^2]^,^[^3]. 
     
 
-Python RGFROSH (`rgfrosh`) is a package for calculating conditions behind incident and reflected shock in
+`rgfrosh` is a package for calculating conditions behind incident and reflected shock in
 a shock tube. As its name suggests, `rgfrosh` was written primarily for solving the frozen shock equations for
 a real gas equation of state; however, the implementation also allows for the use of the ideal gas equation of state or 
 even custom equations of state. Additionally, an implementation of the ideal shock equations is also available for comparison. 
@@ -17,7 +17,7 @@ See the [user guide](guide/getting-started) for information on how to get starte
 
 ## Installation
 
-Python RGFROSH can be installed using
+`rgfrosh` can be installed using
 
 ```
 pip install rgfrosh
@@ -54,7 +54,7 @@ with test coverage comparisons.
 
 ## Cite
 
-To cite Python RGFROSH go to the [GitHub repository](https://github.com/VasuLab/RGFROSH) and click 
+To cite `rgfrosh` go to the [GitHub repository](https://github.com/VasuLab/RGFROSH) and click 
 <kbd>Cite this repository</kbd> on the right side of the page to export the citation for the latest 
 release of `rgfrosh`. It is also encouraged to cite the original paper[^1] for the frozen shock 
 equations that this work is a derivative of.

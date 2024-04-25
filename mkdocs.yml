@@ -1,7 +1,7 @@
-site_name: Python RGFROSH
-site_url: https://vasulab.github.io/RGFROSH
-repo_name: VasuLab/RGFROSH
-repo_url: https://github.com/VasuLab/RGFROSH
+site_name: rgfrosh
+site_url: https://vasulab.github.io/rgfrosh
+repo_name: VasuLab/rgfrosh
+repo_url: https://github.com/VasuLab/rgfrosh
 edit_uri: tree/main/docs/
 
 nav:
@@ -52,7 +52,6 @@ theme:
 
 plugins:
   - search
-  - social
   - mkdocstrings:
       handlers:
         python:
