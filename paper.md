@@ -1,5 +1,5 @@
 ---
-title: 'rgfrosh: A Python frozen shock solver for ideal and real gas equations of state.'
+title: 'rgfrosh: A Python package for calculating shock conditions using real gas equations of state'
 tags:
   - Python
   - shock tube
