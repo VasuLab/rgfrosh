@@ -493,9 +493,7 @@ class FrozenShock(Shock):
             df1_dP2 = 1 / P1 - u1**2 * nu2 * kappa2 / (P1 * nu1**2)
 
             df2_dT2 = 2 * cp2 / u1**2 + 2 * (nu2 / nu1) ** 2 * beta2
-            df2_dP2 = (
-                2 * nu2 * (1 - T2 * beta2) / u1**2 - 2 * nu2**2 * kappa2 / nu1**2
-            )
+            df2_dP2 = 2 * nu2 * (1 - T2 * beta2) / u1**2 - 2 * nu2**2 * kappa2 / nu1**2
 
             deltaT2, deltaP2 = np.matmul(
                 np.linalg.inv(np.array([[df1_dT2, df1_dP2], [df2_dT2, df2_dP2]])),
@@ -671,13 +669,9 @@ class FrozenShock(Shock):
             df1_dP2 = 1 / P1 - u1**2 * nu2 * kappa2 / (P1 * nu1**2)
 
             df2_du1 = -4 * (h2 - h1) / u1**3
-            df2_dP1 = (
-                2 * nu2**2 * kappa1 / nu1**2 - 2 * nu1 * (1 - T1 * beta1) / u1**2
-            )
+            df2_dP1 = 2 * nu2**2 * kappa1 / nu1**2 - 2 * nu1 * (1 - T1 * beta1) / u1**2
             df2_dT2 = 2 * cp2 / u1**2 + 2 * (nu2 / nu1) ** 2 * beta2
-            df2_dP2 = (
-                2 * nu2 * (1 - T2 * beta2) / u1**2 - 2 * nu2**2 * kappa2 / nu1**2
-            )
+            df2_dP2 = 2 * nu2 * (1 - T2 * beta2) / u1**2 - 2 * nu2**2 * kappa2 / nu1**2
 
             df3_du1 = 2 * u1 * (1 - nu2 / nu1) ** 2 / (P2 * (nu5 - nu2))
             df3_dP2 = -P5 / P2**2 - (
