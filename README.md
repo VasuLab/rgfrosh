@@ -1,7 +1,7 @@
 # `rgfrosh` (Real Gas FROzen SHock)
 
-![CI](https://github.com/VasuLab/RGFROSH/actions/workflows/main.yml/badge.svg?event=push)
-[![codecov](https://codecov.io/gh/VasuLab/RGFROSH/branch/main/graph/badge.svg?token=00W4E78FDD)](https://codecov.io/gh/VasuLab/RGFROSH)
+![CI](https://github.com/VasuLab/rgfrosh/actions/workflows/main.yml/badge.svg?event=push)
+[![codecov](https://codecov.io/gh/VasuLab/rgfrosh/branch/main/graph/badge.svg?token=00W4E78FDD)](https://codecov.io/gh/VasuLab/RGFROSH)
 [![pypi](https://img.shields.io/pypi/v/rgfrosh.svg)](https://pypi.python.org/pypi/rgfrosh)
 [![versions](https://img.shields.io/pypi/pyversions/rgfrosh.svg)](https://github.com/VasuLab/rgfrosh)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -21,9 +21,9 @@ even custom equations of state. Additionally, an implementation of the ideal sho
 
 ## Documentation
 
-The [documentation site](https://vasulab.github.io/RGFROSH/latest) provides a detailed 
-[user guide](https://vasulab.github.io/RGFROSH/latest/guide/getting-started) and 
-[reference](https://vasulab.github.io/RGFROSH/latest/reference) for the package.
+The [documentation site](https://vasulab.github.io/rgfrosh/latest) provides a detailed 
+[user guide](https://vasulab.github.io/rgfrosh/latest/guide/getting-started) and 
+[reference](https://vasulab.github.io/rgfrosh/latest/reference) for the package.
 
 ## Installation
 
@@ -39,7 +39,7 @@ be installed separately if desired.
 ## Contributing
 
 For any bugs or feature requests, create an issue on the 
-[issue tracker](https://github.com/VasuLab/RGFROSH/issues). 
+[issue tracker](https://github.com/VasuLab/rgfrosh/issues). 
 
 After cloning the repository, the development environment can be set up with
 
