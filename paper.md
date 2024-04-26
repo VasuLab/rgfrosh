@@ -24,8 +24,8 @@ bibliography: paper.bib
 # Summary
 
 Combustion is a complex process that is influenced by numerous factors, including temperature, pressure, and 
-chemical composition. Combustion modeling relies on chemical kinetics mechanisms that detail how chemical reaction rates
-involving many intermediate species vary with temperature and pressure. Experimental data is essential for measuring 
+chemical composition. Combustion modeling relies on chemical kinetics mechanisms that detail how chemical reaction rates 
+– involving many intermediate species – vary with temperature and pressure. Experimental data is essential for measuring 
 reaction rates, refining mechanisms, and validating predictions from these models for certain fuels and conditions.
 
 Shock tubes are ideal experimental facilities for performing fundamental research in combustion because they use shock 
@@ -37,7 +37,7 @@ experimental results. This is accomplished by solving the reflected shock equati
 using the known initial state of the gas and the measured shock velocity.
 
 Fundamental research into combustion at extremely high-pressure conditions, such as for rocket engines or direct-fire 
-supercritical CO2 power cycles [@kinney:2022], requires consideration of real gas effects in experimental measurements 
+supercritical CO~2~ power cycles [@kinney:2022], requires consideration of real gas effects in experimental measurements 
 and model simulations. A shock solver supporting real gas equations of state called RGFROSH was previously developed in 
 FORTRAN by @davidson:1996; however, there existed a need for a modernized open-source version, as the original is not 
 generally available nor would it be readily compatible with modern tools. Thus, the present `rgfrosh` was developed in 
