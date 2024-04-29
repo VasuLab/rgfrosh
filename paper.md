@@ -17,7 +17,7 @@ authors:
 affiliations:
  - name: Department of Mechanical and Aerospace Engineering, University of Central Florida, Orlando, FL USA
    index: 1
-date: 26 April 2024
+date: 29 April 2024
 bibliography: paper.bib
 ---
 
@@ -75,5 +75,6 @@ and reflected shock, respectively; frozen-equilibrium and frozen-frozen modes ar
 
 We would like to acknowledge D. F. Davidson and R. K. Hanson for authoring the original software this 
 work is based on, granting permission to use the package name, and for providing validation data for comparison.
+Additionally, the authors appreciate funding from the University of Central Florida.
 
 # References
