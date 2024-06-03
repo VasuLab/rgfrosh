@@ -23,6 +23,14 @@ bibliography: paper.bib
 
 # Summary
 
+`rgfrosh` solves the reflected shock equations for an arbitrary equation of state, allowing for accurate calculation of
+the temperature and pressure behind a reflected shock accounting for real gas effects. Forward and inverse solvers are 
+provided to calculate experimental conditions based on measurements and to plan experiments based on desired conditions, 
+respectively. `rgfrosh` is designed to be lightweight and extensible, with a simple interface for users to utilize 
+existing thermodynamic libraries. 
+
+# Statement of need
+
 Combustion is a complex process that is influenced by numerous factors, including temperature, pressure, and 
 chemical composition. Combustion modeling relies on chemical kinetics mechanisms that detail how chemical reaction rates 
 – involving many intermediate species – vary with temperature and pressure. Experimental data is essential for measuring 

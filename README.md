@@ -7,6 +7,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [![license](https://img.shields.io/github/license/VasuLab/rgfrosh.svg)](https://github.com/VasuLab/rgfrosh/blob/main/LICENSE)
+[![status](https://joss.theoj.org/papers/6bb745c8b115f25cee8b6fb251a9a2ff/status.svg)](https://joss.theoj.org/papers/6bb745c8b115f25cee8b6fb251a9a2ff)
 [![DOI](https://zenodo.org/badge/435992350.svg)](https://zenodo.org/badge/latestdoi/435992350)
 
 > This project is a solver for the frozen shock equations[^1] developed in Python at the
