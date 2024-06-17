@@ -170,7 +170,6 @@ def test_consistency(gas, u1):
     3. Check that all properties are consistent between the objects from steps 1 and 2
     """
 
-    gas = ct.Nitrogen()
     from_initial = FrozenShock(gas, u1=u1, T1=300, P1=101325)
     from_target = FrozenShock(
         gas, T5=from_initial.T5, P5=from_initial.P5, T1=from_initial.T1
