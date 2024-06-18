@@ -81,9 +81,9 @@ class TestRatios:
         ("gamma", "M1", "T2_1", "T5_2"),
         [
             (7 / 5, 2.95, 2.62, 1.76),
-            pytest.param(7 / 5, 6.56, 9.31, 2.28, marks=pytest.mark.xfail),
+            # pytest.param(7 / 5, 6.56, 9.31, 2.28, marks=pytest.mark.xfail),  # Error in Table II.3
             (5 / 3, 2.87, 3.42, 1.94),
-            pytest.param(5 / 3, 6.34, 13.4, 2.37, marks=pytest.mark.xfail),
+            # pytest.param(5 / 3, 6.34, 13.4, 2.37, marks=pytest.mark.xfail),  # Error in Table II.3
         ],
     )
     def test_reflected_temperature_ratio(gamma, M1, T2_1, T5_2):
