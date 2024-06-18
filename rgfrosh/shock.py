@@ -138,7 +138,7 @@ class IdealShock(Shock):
         rho5 = P5 / (R * T5)
 
         u2 = u1 / IdealShock.incident_density_ratio(M, gamma)
-        u5 = u1 * IdealShock.reflected_velocity_ratio(M, gamma)
+        u5 = u1 * (1 - rho1 / rho2) * (rho5 / rho2 - 1)
 
         super().__init__(u1, T1, P1, rho1, u2, T2, P2, rho2, u5, T5, P5, rho5, MW)
 
@@ -270,23 +270,6 @@ class IdealShock(Shock):
             * ((3 * gamma - 1) * M**2 - 2 * (gamma - 1))
             / ((gamma + 1) * M) ** 2
         )
-
-    @staticmethod
-    def reflected_velocity_ratio(M: float, gamma: float) -> float:
-        r"""
-        Calculates the ratio of the reflected shock velocity to the incident shock velocity:
-
-        $$
-        \frac{V_R}{V_S} = \frac{2+\frac{2}{\gamma-1}\frac{P_1}{P_2}}
-        {\frac{\gamma+1}{\gamma-1}-\frac{P_1}{P_2}}
-        $$
-
-        Parameters:
-            M: Incident shock Mach number.
-            gamma: Specific heat ratio.
-        """
-        P12 = 1 / IdealShock.incident_pressure_ratio(M, gamma)
-        return (2 + 2 * P12 / (gamma - 1)) / ((gamma + 1) / (gamma - 1) - P12)
 
     @staticmethod
     def incident_Mach_number(gamma: float, T5: float, T1: float = 1):

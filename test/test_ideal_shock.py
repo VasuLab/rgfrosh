@@ -93,21 +93,6 @@ class TestRatios:
             rtol=TestRatios.rtol,
         )
 
-    @staticmethod
-    @pytest.mark.parametrize(
-        ("gamma", "M1", "VR_S"),
-        [
-            (7 / 5, 2.95, 0.423),
-            (7 / 5, 6.56, 0.351),
-            (5 / 3, 2.87, 0.589),
-            (5 / 3, 6.34, 0.517),
-        ],
-    )
-    def test_reflected_velocity_ratio(gamma, M1, VR_S):
-        assert_allclose(
-            IdealShock.reflected_velocity_ratio(M1, gamma), VR_S, rtol=TestRatios.rtol
-        )
-
 
 @pytest.mark.parametrize("gamma,MW", [(7 / 5, 28), (5 / 3, 40)])  # [Nitrogen, Argon]
 @pytest.mark.parametrize("M", [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])

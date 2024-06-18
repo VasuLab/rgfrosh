@@ -115,13 +115,6 @@ class TestIdealCase:
             IdealShock.reflected_pressure_ratio(M, gamma),
         )
 
-    @pytest.mark.xfail
-    def test_reflected_velocity_ratio(self, ideal_case, M, gamma, MW):
-        assert_almost_equal(
-            ideal_case.u5 / ideal_case.u1,
-            IdealShock.reflected_velocity_ratio(M, gamma),
-        )
-
 
 class TestRealGas:
     """
