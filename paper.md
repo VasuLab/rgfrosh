@@ -46,17 +46,26 @@ using the known initial state of the gas and the measured shock velocity.
 
 Fundamental research into combustion at extremely high-pressure conditions, such as for rocket engines or direct-fire 
 supercritical CO~2~ power cycles [@kinney:2022], requires consideration of real gas effects in experimental measurements 
-and model simulations. A shock solver supporting real gas equations of state called RGFROSH was previously developed in 
-FORTRAN by @davidson:1996; however, there existed a need for a modernized open-source version, as the original is not 
-generally available nor would it be readily compatible with modern tools. Thus, the present `rgfrosh` was developed in 
-Python as a solution that uses modern thermodynamic libraries to enable further research into high-pressure combustion.
+and model simulations. 
+
+## State of the field
+
+A shock solver supporting real gas equations of state called RGFROSH was previously developed in FORTRAN by @davidson:1996; 
+however, there existed a need for a modernized open-source version, as the original is not generally available nor would it 
+be readily compatible with modern tools. The extensive SDToolbox [@sdtoolbox] has functionality for computing the postshock 
+state for a chemically frozen shock; however, SDToolbox only supports Cantera [@cantera] for thermodynamic properties and 
+does not provide a convenient interface to obtain the full solution for a reflected shock for both the forward and inverse 
+problems. Thus, the present `rgfrosh` was developed in Python as a solution that can utilize any modern thermodynamic 
+library to solve for the full reflected shock solution for an arbitrary equation of state to enable further research into 
+high-pressure combustion.
 
 # Features
 
-`rgfrosh` provides a simple interface for solving the reflected shock equations. Two models are provided - `IdealShock` 
-for calorically perfect gases, and `FrozenShock` for arbitrary equations of state. The former is primarily included for 
-comparison and validation purposes, while the latter is the primary focus of the package as it allows for accurate 
-calculation of the reflected shock conditions for real gases. 
+`rgfrosh` provides a simple interface for solving the reflected shock equations, allowing the user to obtain the full 
+solution with a single function call. Two models are provided - `IdealShock` for calorically perfect gases, and 
+`FrozenShock` for arbitrary equations of state. The former is primarily included for comparison and validation purposes, 
+while the latter is the primary focus of the package as it allows for accurate calculation of the reflected shock 
+conditions for real gases. 
 
 To remain as lightweight and extensible as possible, `rgfrosh` relies on external packages for the key thermodynamic 
 functions required by the `FrozenShock` solver. The required interface is defined by the `ThermoInterface` protocol 
