@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/license/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/license/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/guide/getting-started/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/guide/getting-started/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/guide/thermodynamic-interfaces/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/guide/thermodynamic-interfaces/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/constants/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/constants/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/errors/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/errors/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/thermo/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/thermo/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/shock/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/shock/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/shock/frozen/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/shock/frozen/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://vasulab.github.io/RGFROSH/0.2/reference/shock/ideal/</loc>
+         <loc>https://vasulab.github.io/rgfrosh/0.2/reference/shock/ideal/</loc>
          <lastmod>2024-06-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
