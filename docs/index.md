@@ -1,3 +1,8 @@
+---
+title: Real Gas FROzen SHock (RGFROSH)
+description: A Python package for calculating shock properties for real gases.
+---
+
 # `rgfrosh` (Real Gas FROzen SHock)
 
 !!! cite ""
