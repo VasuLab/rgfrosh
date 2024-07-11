@@ -7,6 +7,7 @@ edit_uri: tree/main/docs/
 nav:
   - Home:
       - index.md
+      - Changelog: changelog.md
       - License: license.md
   - User Guide:
     - Getting Started: guide/getting-started.md
@@ -76,6 +77,9 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
   - pymdownx.caret
   - pymdownx.highlight
   - pymdownx.inlinehilite
