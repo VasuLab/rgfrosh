@@ -1,9 +1,32 @@
-cff-version: 1.2.0
+cff-version: "1.2.0"
 authors:
-- family-names: "Kinney"
-  given-names: "Cory"
-title: "Python RGFROSH: A frozen shock solver for ideal and real gas equations of state."
-version: 0.2.0
-doi: https://doi.org/10.5281/zenodo.7868412
-date-released: 2023-04-26
-url: "https://github.com/VasuLab/RGFROSH"
+- family-names: Kinney
+  given-names: Cory
+  orcid: "https://orcid.org/0000-0001-8774-3090"
+- family-names: Vasu
+  given-names: Subith
+doi: 10.5281/zenodo.12725333
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Kinney
+    given-names: Cory
+    orcid: "https://orcid.org/0000-0001-8774-3090"
+  - family-names: Vasu
+    given-names: Subith
+  date-published: 2024-07-11
+  doi: 10.21105/joss.06855
+  issn: 2475-9066
+  issue: 99
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6855
+  title: "rgfrosh: A Python package for calculating shock conditions
+    using real gas equations of state"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06855"
+  volume: 9
+title: "rgfrosh: A Python package for calculating shock conditions using
+  real gas equations of state"
